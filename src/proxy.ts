@@ -14,7 +14,7 @@ export const proxy = auth((req) => {
   const isOnboardingRoute = nextUrl.pathname === '/onboarding';
   
   if (isApiAuthRoute || isBlockedRoute) {
-    return null; // Always allow access
+    return; // Always allow access
   }
   
   if (isLoginRoute) {
@@ -28,7 +28,7 @@ export const proxy = auth((req) => {
         return Response.redirect(new URL('/announcements', nextUrl));
       }
     }
-    return null;
+    return;
   }
   
   if (!isLoggedIn) {
@@ -71,7 +71,7 @@ export const proxy = auth((req) => {
     return Response.redirect(new URL('/admin/dashboard', nextUrl));
   }
   
-  return null;
+  return;
 });
 
 export const config = {
