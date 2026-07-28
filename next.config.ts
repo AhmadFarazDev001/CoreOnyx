@@ -1,10 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  distDir: 'dist',
   allowedDevOrigins: [
-    '172.29.120.176', // User's mobile IP
-    '192.168.100.243',
     'localhost',
     '127.0.0.1'
   ],
