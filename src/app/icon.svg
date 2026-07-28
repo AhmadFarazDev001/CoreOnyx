@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <defs>
+    <linearGradient id="coreGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3B82F6" /> <!-- Blue -->
+      <stop offset="100%" stop-color="#8B5CF6" /> <!-- Purple -->
+    </linearGradient>
+    <linearGradient id="onyxGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E293B" />
+      <stop offset="100%" stop-color="#0F172A" />
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Base Dark Gem (Onyx) -->
+  <path d="M128 16 L224 72 L224 184 L128 240 L32 184 L32 72 Z" fill="url(#onyxGradient)" stroke="url(#coreGradient)" stroke-width="6" stroke-linejoin="round" />
+
+  <!-- Inner glowing structure (The Core) -->
+  <path d="M128 48 L192 84 L192 172 L128 208 L64 172 L64 84 Z" fill="none" stroke="url(#coreGradient)" stroke-width="8" stroke-linejoin="round" filter="url(#glow)" opacity="0.8" />
+  
+  <!-- Center abstract diamond -->
+  <path d="M128 88 L152 128 L128 168 L104 128 Z" fill="url(#coreGradient)" filter="url(#glow)" />
+</svg>

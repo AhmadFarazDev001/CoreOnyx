@@ -1,0 +1,237 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String          @id @default(cuid())
+  name          String
+  email         String          @unique
+  emailVerified DateTime?
+  image         String?
+  role          Role            @default(STUDENT)
+  onboarded     Boolean         @default(false)
+  isBlocked     Boolean         @default(false)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  accounts      Account[]
+  sessions      Session[]
+  sentMessages  ChatMessage[]   @relation("MessageSender")
+  disputes      DisputeTicket[] @relation("DisputeStudent")
+  announcements      Announcement[]
+  threadParticipants ThreadParticipant[]
+
+  // NOTE: GradeRecord is NOT related to User via FK.
+  // Grades are linked by studentEmail because the TA uploads CSV grades
+  // before students have ever logged in (no User record exists yet).
+
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+model Announcement {
+  id        String           @id @default(cuid())
+  title     String
+  body      String           @db.Text
+  priority  AnnouncementPriority @default(NORMAL)
+  isPinned  Boolean          @default(false)
+  authorId  String
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  author    User             @relation(fields: [authorId], references: [id])
+
+  @@map("announcements")
+}
+
+model Solution {
+  id            String       @id @default(cuid())
+  title         String
+  labNumber     Int
+  language      String       @default("cpp")
+  code          String       @db.Text
+  consoleOutput String       @db.Text
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  annotations   Annotation[]
+
+  @@map("solutions")
+}
+
+model Annotation {
+  id          String         @id @default(cuid())
+  solutionId  String
+  lineNumber  Int
+  content     String         @db.Text
+  type        AnnotationType @default(INFO)
+
+  solution    Solution       @relation(fields: [solutionId], references: [id], onDelete: Cascade)
+
+  @@map("annotations")
+}
+
+model ChatThread {
+  id           String        @id @default(cuid())
+  type         ThreadType
+  title        String
+  isFAQ        Boolean       @default(false)
+  isResolved   Boolean       @default(false)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  messages     ChatMessage[]
+  participants ThreadParticipant[]
+
+  @@map("chat_threads")
+}
+
+model ThreadParticipant {
+  id        String     @id @default(cuid())
+  threadId  String
+  userId    String
+  joinedAt  DateTime   @default(now())
+  lastReadAt DateTime  @default(now())
+
+  thread    ChatThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([threadId, userId])
+  @@map("thread_participants")
+}
+
+model ChatMessage {
+  id            String      @id @default(cuid())
+  threadId      String
+  senderId      String
+  content       String      @db.Text
+  isCodeSnippet Boolean     @default(false)
+  status        MessageStatus @default(SENT)
+  createdAt     DateTime    @default(now())
+
+  thread        ChatThread  @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  sender        User        @relation("MessageSender", fields: [senderId], references: [id])
+
+  @@map("chat_messages")
+}
+
+// CRITICAL OVERRIDE: GradeRecord uses studentEmail, NOT userId.
+// The TA uploads grades via CSV BEFORE students have ever logged in.
+// There is no User record to reference at upload time.
+model GradeRecord {
+  id           String   @id @default(cuid())
+  studentEmail String   @unique     // ← Unique identifier, not a FK to User
+  studentName  String?              // Parsed from CSV, may be null
+  assessments  Json                 @default("{}") // E.g. { "Quiz 1": { score: 10, max: 20, absMax: 2, absScore: 1 } }
+  totalAbsScore Float               @default(0)
+  totalAbsMax   Float               @default(0)
+  uploadedAt   DateTime @default(now())
+
+  // NO relation to User — grades exist independently of auth
+  @@map("grade_records")
+}
+
+// Dynamic Whitelist: Replaces hardcoded email arrays.
+// Managed via the Admin Roster UI at /admin/roster.
+model Whitelist {
+  email     String   @id          // Email IS the primary key — no cuid needed
+  createdAt DateTime @default(now())
+
+  @@map("whitelist")
+}
+
+model DisputeTicket {
+  id             String        @id @default(cuid())
+  studentId      String
+  subject        String
+  assessmentName String
+  rationale      String        @db.Text
+  attachments    String[]      // Array of Vercel Blob URLs (cleaned after 90 days archived)
+  status       TicketStatus  @default(OPEN)
+  resolution   String?       @db.Text
+  createdAt    DateTime      @default(now())
+  resolvedAt   DateTime?
+  updatedAt    DateTime      @updatedAt
+
+  student      User          @relation("DisputeStudent", fields: [studentId], references: [id])
+
+  @@map("dispute_tickets")
+}
+
+enum Role {
+  STUDENT
+  ADMIN
+}
+
+enum AnnouncementPriority {
+  NORMAL
+  URGENT
+}
+
+enum AnnotationType {
+  INFO
+  WARNING
+  TIP
+}
+
+enum ThreadType {
+  PUBLIC
+  PRIVATE
+}
+
+enum MessageStatus {
+  SENT
+  DELIVERED
+  READ
+}
+
+enum TicketStatus {
+  OPEN
+  IN_REVIEW
+  RESOLVED
+  ARCHIVED
+}
