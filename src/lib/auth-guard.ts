@@ -1,6 +1,7 @@
 import { auth } from "./auth";
 import { prisma } from "./prisma";
 import { Role } from "@prisma/client";
+import { redirect } from "next/navigation";
 
 /**
  * Requires an authenticated user session.
@@ -9,7 +10,7 @@ import { Role } from "@prisma/client";
 export async function requireAuth() {
   const session = await auth();
   if (!session?.user?.id) {
-    throw new Error("Unauthorized");
+    redirect("/login");
   }
 
   // Double-check DB state for blocked users
@@ -19,11 +20,11 @@ export async function requireAuth() {
   });
 
   if (!dbUser) {
-    throw new Error("User not found");
+    redirect("/api/force-logout");
   }
 
   if (dbUser.isBlocked) {
-    throw new Error("Account blocked");
+    redirect("/blocked");
   }
 
   return { session, dbUser };
@@ -36,7 +37,7 @@ export async function requireAdmin() {
   const { session, dbUser } = await requireAuth();
   
   if (dbUser.role !== Role.ADMIN) {
-    throw new Error("Forbidden: Admin access required");
+    redirect("/announcements");
   }
 
   return { session, dbUser };
