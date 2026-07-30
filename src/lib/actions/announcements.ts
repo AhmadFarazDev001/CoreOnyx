@@ -3,8 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { requireAuth, requireAdmin } from "@/lib/auth-guard";
 import { revalidatePath } from "next/cache";
-import DOMPurify from "dompurify";
-import { JSDOM } from "jsdom";
+import DOMPurify from "isomorphic-dompurify";
 import { announcementSchema } from "@/lib/validations";
 
 export async function getAnnouncements() {
@@ -22,12 +21,9 @@ export async function getAnnouncements() {
     ],
   });
 
-  const window = new JSDOM("").window;
-  const purify = DOMPurify(window);
-
   return announcements.map((a) => ({
     ...a,
-    body: purify.sanitize(a.body, {
+    body: DOMPurify.sanitize(a.body, {
       ALLOWED_TAGS: ["b", "i", "em", "strong", "a", "p", "br", "ul", "ol", "li", "h2", "h3", "code", "pre"],
       ALLOWED_ATTR: ["href", "target", "rel"],
     }),
@@ -39,9 +35,7 @@ export async function createAnnouncement(data: { title: string; body: string; pr
 
   const validated = announcementSchema.parse(data);
 
-  const window = new JSDOM("").window;
-  const purify = DOMPurify(window);
-  const sanitizedBody = purify.sanitize(validated.body, {
+  const sanitizedBody = DOMPurify.sanitize(validated.body, {
     ALLOWED_TAGS: ["b", "i", "em", "strong", "a", "p", "br", "ul", "ol", "li", "h2", "h3", "code", "pre"],
     ALLOWED_ATTR: ["href", "target", "rel"],
   });
