@@ -3,6 +3,7 @@ import { auth } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import { Metadata } from 'next';
+import { SecurityGuard } from '@/components/shared/SecurityGuard';
 
 export const metadata: Metadata = {
   title: 'Student Dashboard | CoreOnyx',
@@ -32,6 +33,7 @@ export default async function StudentLayout({
 
   return (
     <div className="min-h-screen bg-[var(--bg-primary)] flex flex-col">
+      <SecurityGuard />
       <StudentHeader user={{ name: session.user.name || 'User', email: session.user.email || '' }} />
       {/* 
         Add top padding for desktop header (64px = pt-16).

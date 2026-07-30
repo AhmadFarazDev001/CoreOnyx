@@ -4,6 +4,7 @@ import './globals.css';
 import { ThemeProvider } from '@/components/providers/ThemeProvider';
 import { AuthProvider } from '@/components/providers/AuthProvider';
 import Script from 'next/script';
+import NextTopLoader from 'nextjs-toploader';
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
@@ -50,6 +51,17 @@ export default function RootLayout({
       >
         <AuthProvider>
           <ThemeProvider>
+            <NextTopLoader
+              color="var(--accent-primary)"
+              initialPosition={0.08}
+              crawlSpeed={200}
+              height={3}
+              crawl={true}
+              showSpinner={false}
+              easing="ease"
+              speed={200}
+              shadow="0 0 10px var(--accent-primary),0 0 5px var(--accent-primary)"
+            />
             {children}
           </ThemeProvider>
         </AuthProvider>
