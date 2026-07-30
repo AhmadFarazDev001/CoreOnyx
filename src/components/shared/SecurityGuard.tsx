@@ -40,12 +40,10 @@ export function SecurityGuard() {
     // If devtools is somehow opened (e.g., from browser menu), this will constantly pause execution.
     const debuggerTrap = setInterval(() => {
       const before = new Date().getTime();
-      // eslint-disable-next-line no-debugger
-      debugger;
+      Function("debugger")();
       const after = new Date().getTime();
       if (after - before > 100) {
         // Devtools is open and paused the execution
-        // We could redirect them or show a warning here, but debugger alone freezes it.
       }
     }, 1000);
 
