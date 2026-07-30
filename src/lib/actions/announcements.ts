@@ -3,7 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { requireAuth, requireAdmin } from "@/lib/auth-guard";
 import { revalidatePath } from "next/cache";
-import DOMPurify from "isomorphic-dompurify";
+import { sanitizeAnnouncementHtml } from "@/lib/sanitize";
 import { announcementSchema } from "@/lib/validations";
 
 export async function getAnnouncements() {
@@ -23,10 +23,7 @@ export async function getAnnouncements() {
 
   return announcements.map((a) => ({
     ...a,
-    body: DOMPurify.sanitize(a.body, {
-      ALLOWED_TAGS: ["b", "i", "em", "strong", "a", "p", "br", "ul", "ol", "li", "h2", "h3", "code", "pre"],
-      ALLOWED_ATTR: ["href", "target", "rel"],
-    }),
+    body: sanitizeAnnouncementHtml(a.body),
   }));
 }
 
@@ -35,10 +32,7 @@ export async function createAnnouncement(data: { title: string; body: string; pr
 
   const validated = announcementSchema.parse(data);
 
-  const sanitizedBody = DOMPurify.sanitize(validated.body, {
-    ALLOWED_TAGS: ["b", "i", "em", "strong", "a", "p", "br", "ul", "ol", "li", "h2", "h3", "code", "pre"],
-    ALLOWED_ATTR: ["href", "target", "rel"],
-  });
+  const sanitizedBody = sanitizeAnnouncementHtml(validated.body);
 
   await prisma.announcement.create({
     data: {
