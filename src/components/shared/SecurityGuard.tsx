@@ -36,16 +36,7 @@ export function SecurityGuard() {
       }
     };
 
-    // 3. Debugger Trap (Optional but highly effective)
-    // If devtools is somehow opened (e.g., from browser menu), this will constantly pause execution.
-    const debuggerTrap = setInterval(() => {
-      const before = new Date().getTime();
-      Function("debugger")();
-      const after = new Date().getTime();
-      if (after - before > 100) {
-        // Devtools is open and paused the execution
-      }
-    }, 1000);
+
 
     // Attach listeners
     document.addEventListener("contextmenu", handleContextMenu);
@@ -55,7 +46,6 @@ export function SecurityGuard() {
     return () => {
       document.removeEventListener("contextmenu", handleContextMenu);
       document.removeEventListener("keydown", handleKeyDown);
-      clearInterval(debuggerTrap);
     };
   }, []);
 
