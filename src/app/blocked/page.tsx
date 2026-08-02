@@ -10,6 +10,10 @@ export const metadata: Metadata = {
   description: 'Your account has been suspended.',
 };
 
+/**
+ * Access denial page for suspended accounts.
+ * Validates blockade status and provides an exit hatch via signOut.
+ */
 export default async function BlockedPage() {
   const session = await auth();
   
@@ -19,7 +23,6 @@ export default async function BlockedPage() {
       select: { isBlocked: true, role: true }
     });
     
-    // If user is logged in but NOT blocked in the DB, redirect them to safety
     if (dbUser && !dbUser.isBlocked) {
       if (dbUser.role === 'ADMIN') {
         redirect('/admin/dashboard');

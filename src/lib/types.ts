@@ -1,3 +1,7 @@
+/**
+ * Core type definitions for the application.
+ * Extends Prisma types with relational data to ensure strict typing across components.
+ */
 import { 
   User as PrismaUser, 
   Announcement as PrismaAnnouncement,

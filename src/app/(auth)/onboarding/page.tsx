@@ -8,6 +8,10 @@ import { Input } from "@/components/ui/Input";
 import { completeOnboarding } from "@/lib/actions/onboarding";
 import { Hexagon } from "lucide-react";
 
+/**
+ * New user onboarding flow.
+ * Forces newly authenticated users to provide their name before accessing the platform.
+ */
 export default function OnboardingPage() {
   const { data: session, update } = useSession();
   const router = useRouter();
@@ -24,10 +28,8 @@ export default function OnboardingPage() {
     try {
       const res = await completeOnboarding(formData);
       if (res.success) {
-        // Tell NextAuth to refresh the JWT/session to pick up the onboarded=true flag
         await update({ onboarded: true });
         
-        // Redirect based on role
         if (session?.user?.role === "ADMIN") {
           router.push("/admin/dashboard");
         } else {

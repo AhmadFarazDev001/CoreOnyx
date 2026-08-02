@@ -10,6 +10,10 @@ export interface TooltipProps {
   position?: 'top' | 'bottom' | 'left' | 'right';
 }
 
+/**
+ * A reusable Tooltip component that reveals content on hover or focus.
+ * Supports positioning at top, bottom, left, or right.
+ */
 export function Tooltip({ content, children, className, position = 'top' }: TooltipProps) {
   const [isVisible, setIsVisible] = useState(false);
 

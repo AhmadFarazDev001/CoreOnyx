@@ -1,3 +1,7 @@
+/**
+ * Zod schemas for validating incoming data across the application.
+ * Shared between client-side forms and server-side actions.
+ */
 import { z } from "zod";
 
 export const announcementSchema = z.object({

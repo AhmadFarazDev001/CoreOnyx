@@ -7,6 +7,10 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
+/**
+ * Server Component for the Student Solutions viewer.
+ * Provides a split-pane interface to browse and view golden code solutions.
+ */
 export default async function SolutionsPage({
   searchParams,
 }: {
@@ -32,8 +36,6 @@ export default async function SolutionsPage({
     );
   }
 
-  // For desktop, default to the first solution if no ID is selected.
-  // For mobile, we use the presence of params.id to trigger the sliding overlay.
   const activeSolution = params.id 
     ? solutions.find((s) => s.id === params.id) 
     : solutions[0];
@@ -43,10 +45,9 @@ export default async function SolutionsPage({
   return (
     <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 max-w-[1400px] mx-auto h-[calc(100vh-140px)] relative overflow-hidden">
       
-      {/* Left Sidebar: List of solutions */}
+      {/* Solution List Sidebar */}
       <div className={cn(
         "w-full lg:w-[350px] flex flex-col gap-4 overflow-y-auto pr-2 pb-6 lg:pb-0 transition-transform duration-300",
-        // On mobile, if a solution is active, we can slightly push the list back, but we don't need to if the overlay covers it.
         "animate-page-in"
       )}>
         <div className="mb-2 hidden lg:block">
@@ -66,7 +67,7 @@ export default async function SolutionsPage({
         </div>
       </div>
 
-      {/* Right Content: Code Viewer (Desktop) or Sliding Overlay (Mobile) */}
+      {/* Active Solution View */}
       <div className={cn(
         "flex-1 flex-col min-w-0 bg-[var(--bg-primary)] lg:bg-transparent",
         "fixed inset-0 z-50 lg:static lg:flex lg:z-auto transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
@@ -74,7 +75,7 @@ export default async function SolutionsPage({
           ? "translate-y-0 flex pt-16 lg:pt-0 px-4 lg:px-0 pb-[env(safe-area-inset-bottom)] lg:pb-0" 
           : "translate-y-[100%] lg:translate-y-0 hidden lg:flex"
       )}>
-        {/* Mobile Header / Close Button inside the sliding overlay */}
+        {/* Mobile Header */}
         <div className="lg:hidden flex items-center justify-between gap-2 mb-4 shrink-0">
           <h2 className="text-lg font-bold text-[var(--text-primary)] truncate">
             {activeSolution?.title || 'Select a Solution'}

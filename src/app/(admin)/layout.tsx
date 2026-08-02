@@ -9,6 +9,10 @@ export const metadata: Metadata = {
   description: 'Manage students, tickets, and announcements.',
 };
 
+/**
+ * Secure layout wrapper for all /admin routes.
+ * Enforces session authentication and blocks unauthorized or suspended users.
+ */
 export default async function AdminLayout({
   children,
 }: {

@@ -5,6 +5,10 @@ import { del } from "@vercel/blob";
 
 import { requireAdmin } from "@/lib/auth-guard";
 
+/**
+ * Cleans up archived dispute tickets older than 90 days.
+ * Requires ADMIN role. Deletes attachments from Vercel Blob and clears them from the DB.
+ */
 export async function cleanupArchivedTickets() {
   await requireAdmin();
   // Find tickets that have been ARCHIVED for more than 90 days

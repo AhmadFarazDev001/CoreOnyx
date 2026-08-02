@@ -2,6 +2,10 @@
 
 import { useEffect } from "react";
 
+/**
+ * Client component that restricts access to browser developer tools.
+ * Disables right-click context menus and common DevTools keyboard shortcuts.
+ */
 export function SecurityGuard() {
   useEffect(() => {
     // 1. Disable Right-Click (Context Menu)

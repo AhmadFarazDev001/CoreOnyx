@@ -4,6 +4,10 @@ import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import { UserManagementList } from '@/components/admin/UserManagementList';
 
+/**
+ * Primary admin dashboard page.
+ * Displays high-level platform metrics and provides quick actions for core management workflows.
+ */
 export default async function AdminDashboardPage() {
   const activeStudents = await prisma.user.count({ where: { role: 'STUDENT' } });
   const openThreads = await prisma.chatThread.count({ where: { isResolved: false } });

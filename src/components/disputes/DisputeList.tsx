@@ -3,6 +3,10 @@ import { Badge } from '@/components/ui/Badge';
 import { formatDistanceToNow } from 'date-fns';
 import { Ticket } from 'lucide-react';
 
+/**
+ * UI Component for rendering a list of dispute tickets.
+ * Displays ticket subjects, statuses, and timestamps with interactive selection.
+ */
 export function DisputeList({ 
   tickets, 
   activeId, 

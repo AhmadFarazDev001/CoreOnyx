@@ -6,6 +6,11 @@ import { User, ChatThread } from '@/lib/types';
 import { ThreadList } from './ThreadList';
 import { cn } from '@/lib/utils';
 
+/**
+ * Wrapper component for the ThreadList.
+ * Provides the Segmented Control (Public/Private tabs) and handles routing
+ * based on the user's role when a thread is selected.
+ */
 export function ThreadListWrapper({ threads, activeId, currentUser }: { threads: ChatThread[], activeId: string, currentUser: User }) {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<'PUBLIC' | 'PRIVATE'>('PUBLIC');

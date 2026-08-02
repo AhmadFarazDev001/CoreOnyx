@@ -10,6 +10,10 @@ export const metadata: Metadata = {
   description: 'Your lab companion, built for clarity.',
 };
 
+/**
+ * Secure layout wrapper for all student routes.
+ * Enforces session authentication and blocks unauthorized or suspended users.
+ */
 export default async function StudentLayout({
   children,
 }: {

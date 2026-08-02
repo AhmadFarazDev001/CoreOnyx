@@ -9,6 +9,10 @@ import { createSolution, deleteSolution } from '@/lib/actions/solutions';
 import { Solution, Annotation } from '@/lib/types';
 import { formatDistanceToNow } from 'date-fns';
 
+/**
+ * Client component for managing code solutions.
+ * Provides a UI for publishing, formatting, and deleting golden solutions for lab assignments.
+ */
 export function AdminSolutionsClient({ solutions }: { solutions: Solution[] }) {
   const [title, setTitle] = useState('');
   const [labNumber, setLabNumber] = useState('');
@@ -67,7 +71,6 @@ export function AdminSolutionsClient({ solutions }: { solutions: Solution[] }) {
       setLabNumber('');
       setCode('');
       setOutput('');
-      // Data is automatically refreshed via Server Action
     } catch (error) {
       console.error(error);
     } finally {

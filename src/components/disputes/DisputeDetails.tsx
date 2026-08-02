@@ -12,6 +12,13 @@ import { formatDistanceToNow } from 'date-fns';
 import { CheckCircle, Clock, Paperclip, MessageSquare, Trash2 } from 'lucide-react';
 import { updateTicketStatus, deleteDispute } from '@/lib/actions/disputes';
 
+/**
+ * Client component for rendering the details of a dispute ticket.
+ * Allows students to view the status, and admins to resolve or delete tickets.
+ * 
+ * @param {DisputeTicket} ticket - The dispute ticket data object.
+ * @param {boolean} isAdmin - Flag to determine if the user has admin privileges.
+ */
 export function DisputeDetails({ 
   ticket, 
   isAdmin 

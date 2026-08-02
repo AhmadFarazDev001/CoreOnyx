@@ -3,6 +3,10 @@ import { authConfig } from "./lib/auth.config";
 
 const { auth } = NextAuth(authConfig);
 
+/**
+ * Next.js Middleware configuration (named proxy.ts to avoid conflicts).
+ * Handles global route protection, redirects based on user roles and onboarding status.
+ */
 export const proxy = auth((req) => {
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;

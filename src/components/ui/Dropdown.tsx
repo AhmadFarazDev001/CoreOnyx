@@ -10,6 +10,10 @@ export interface DropdownProps {
   className?: string;
 }
 
+/**
+ * Reusable dropdown component with click-outside behavior.
+ * Supports aligning the dropdown to the left or right of the trigger.
+ */
 export function Dropdown({ trigger, children, align = 'right', className }: DropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);

@@ -8,6 +8,10 @@ import { TicketStatus, Prisma } from "@prisma/client";
 import { disputeSchema } from "@/lib/validations";
 import { checkRateLimit } from "@/lib/rate-limit";
 
+/**
+ * Creates a new dispute ticket for a student.
+ * Applies rate limiting to prevent abuse.
+ */
 export async function createDispute(data: { subject: string; assessmentName: string; rationale: string; attachments: string[] }) {
   const { session } = await requireAuth();
   
@@ -32,6 +36,10 @@ export async function createDispute(data: { subject: string; assessmentName: str
   return ticket;
 }
 
+/**
+ * Uploads an attachment to Vercel Blob storage.
+ * Applies size, type, and rate limit validations.
+ */
 export async function uploadFileToBlob(formData: FormData) {
   const { session } = await requireAuth();
 
@@ -56,6 +64,9 @@ export async function uploadFileToBlob(formData: FormData) {
   return blob.url;
 }
 
+/**
+ * Retrieves all dispute tickets for the currently authenticated student.
+ */
 export async function getStudentDisputes() {
   const { session } = await requireAuth();
 
@@ -65,6 +76,10 @@ export async function getStudentDisputes() {
   });
 }
 
+/**
+ * Retrieves all dispute tickets across all students.
+ * Requires ADMIN role.
+ */
 export async function getAllDisputes() {
   await requireAdmin();
 
@@ -76,6 +91,10 @@ export async function getAllDisputes() {
   });
 }
 
+/**
+ * Updates the status (and optionally the resolution) of a dispute ticket.
+ * Requires ADMIN role.
+ */
 export async function updateTicketStatus(id: string, status: TicketStatus, resolution?: string) {
   await requireAdmin();
 
@@ -99,6 +118,10 @@ export async function updateTicketStatus(id: string, status: TicketStatus, resol
   return { success: true };
 }
 
+/**
+ * Deletes a dispute ticket and its associated blob attachments.
+ * Requires ADMIN role.
+ */
 export async function deleteDispute(ticketId: string) {
   await requireAdmin();
 
@@ -126,6 +149,10 @@ export async function deleteDispute(ticketId: string) {
   return { success: true };
 }
 
+/**
+ * Archives a dispute ticket, keeping it in the database but marking it as archived.
+ * Requires ADMIN role.
+ */
 export async function archiveTicket(id: string) {
   await requireAdmin();
 

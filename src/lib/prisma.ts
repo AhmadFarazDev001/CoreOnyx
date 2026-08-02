@@ -1,3 +1,7 @@
+/**
+ * Prisma Client singleton instance.
+ * Prevents multiple instances from being created in development due to hot reloading.
+ */
 import { PrismaClient } from "@prisma/client";
 
 declare global {

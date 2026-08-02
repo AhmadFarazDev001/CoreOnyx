@@ -6,6 +6,9 @@ import { revalidatePath } from "next/cache";
 import { Prisma } from "@prisma/client";
 import { upsertGradeSchema } from "@/lib/validations";
 
+/**
+ * Retrieves the grade record for the currently authenticated student.
+ */
 export async function getStudentGrades() {
   const { session } = await requireAuth();
   if (!session.user.email) throw new Error("Unauthorized");
@@ -15,6 +18,10 @@ export async function getStudentGrades() {
   });
 }
 
+/**
+ * Retrieves all grade records for all students.
+ * Requires ADMIN role.
+ */
 export async function getAllGrades() {
   await requireAdmin();
 
@@ -23,6 +30,10 @@ export async function getAllGrades() {
   });
 }
 
+/**
+ * Upserts (creates or updates) a grade record for a student.
+ * Requires ADMIN role. Auto-whitelists the student email to allow them to view their grades.
+ */
 export async function upsertGradeRecord(data: {
   studentEmail: string;
   studentName?: string;
@@ -64,6 +75,10 @@ export async function upsertGradeRecord(data: {
   return record;
 }
 
+/**
+ * Deletes a grade record for a specific student.
+ * Requires ADMIN role.
+ */
 export async function deleteGradeRecord(studentEmail: string) {
   await requireAdmin();
 

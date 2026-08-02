@@ -4,6 +4,13 @@ import { Badge } from '@/components/ui/Badge';
 import { formatDistanceToNow } from 'date-fns';
 import { ChevronRight, Code2 } from 'lucide-react';
 
+/**
+ * UI Component that represents a single solution item in a list.
+ * Displays quiz number, language, title, and posting date.
+ * 
+ * @param {Solution} solution - The solution data object.
+ * @param {boolean} isActive - Styles the card as active if true.
+ */
 export function SolutionCard({ 
   solution, 
   isActive 

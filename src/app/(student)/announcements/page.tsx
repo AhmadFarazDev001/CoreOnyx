@@ -4,6 +4,10 @@ import { PinnedBanner } from '@/components/announcements/PinnedBanner';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { Megaphone, Pin } from 'lucide-react';
 
+/**
+ * Server Component for the Student Announcements feed.
+ * Displays pinned and chronological announcements to keep students updated.
+ */
 export default async function StudentAnnouncementsPage() {
   const announcements = await getAnnouncements();
   
@@ -13,7 +17,7 @@ export default async function StudentAnnouncementsPage() {
   return (
     <div className="w-full max-w-7xl mx-auto min-h-[calc(100vh-140px)] flex flex-col lg:flex-row gap-8 animate-page-in">
       
-      {/* Left Column: Pinned */}
+      {/* Pinned Announcements */}
       <div className="w-full lg:w-[400px] flex flex-col gap-4 shrink-0">
         <div className="flex items-center gap-2 mb-2 text-[var(--status-urgent)]">
           <Pin className="w-5 h-5 fill-current" />
@@ -31,7 +35,7 @@ export default async function StudentAnnouncementsPage() {
         )}
       </div>
 
-      {/* Right Column: Feed */}
+      {/* Feed Announcements */}
       <div className="flex-1 flex flex-col gap-4">
         <div className="flex items-center gap-2 mb-2 text-[var(--text-primary)]">
           <Megaphone className="w-5 h-5" />

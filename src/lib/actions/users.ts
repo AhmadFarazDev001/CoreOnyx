@@ -4,6 +4,10 @@ import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/auth-guard";
 import { revalidatePath } from "next/cache";
 
+/**
+ * Toggles a user's blocked status.
+ * Requires ADMIN role. Prevents an admin from blocking themselves.
+ */
 export async function toggleUserBlock(userId: string) {
   const { session } = await requireAdmin();
 
@@ -30,6 +34,10 @@ export async function toggleUserBlock(userId: string) {
   return { success: true };
 }
 
+/**
+ * Adds a student to the whitelist manually.
+ * Also provisions an empty GradeRecord for them to appear in the Admin Roster immediately.
+ */
 export async function addStudentToWhitelist(email: string) {
   await requireAdmin();
   

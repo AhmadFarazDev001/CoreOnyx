@@ -26,9 +26,9 @@ model User {
   announcements      Announcement[]
   threadParticipants ThreadParticipant[]
 
-  // NOTE: GradeRecord is NOT related to User via FK.
-  // Grades are linked by studentEmail because the TA uploads CSV grades
-  // before students have ever logged in (no User record exists yet).
+  /// Note: GradeRecord is NOT related to User via FK.
+  /// Grades are linked by studentEmail because the TA uploads CSV grades
+  /// before students have ever logged in (no User record exists yet).
 
   @@map("users")
 }
@@ -159,9 +159,9 @@ model ChatMessage {
   @@map("chat_messages")
 }
 
-// CRITICAL OVERRIDE: GradeRecord uses studentEmail, NOT userId.
-// The TA uploads grades via CSV BEFORE students have ever logged in.
-// There is no User record to reference at upload time.
+/// CRITICAL OVERRIDE: GradeRecord uses studentEmail, NOT userId.
+/// The TA uploads grades via CSV BEFORE students have ever logged in.
+/// There is no User record to reference at upload time.
 model GradeRecord {
   id           String   @id @default(cuid())
   studentEmail String   @unique     // ← Unique identifier, not a FK to User
@@ -171,12 +171,12 @@ model GradeRecord {
   totalAbsMax   Float               @default(0)
   uploadedAt   DateTime @default(now())
 
-  // NO relation to User — grades exist independently of auth
+  /// NO relation to User — grades exist independently of auth
   @@map("grade_records")
 }
 
-// Dynamic Whitelist: Replaces hardcoded email arrays.
-// Managed via the Admin Roster UI at /admin/roster.
+/// Dynamic Whitelist: Replaces hardcoded email arrays.
+/// Managed via the Admin Roster UI at /admin/roster.
 model Whitelist {
   email     String   @id          // Email IS the primary key — no cuid needed
   createdAt DateTime @default(now())

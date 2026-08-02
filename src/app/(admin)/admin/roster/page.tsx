@@ -7,6 +7,10 @@ import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { AdminRosterRow } from '@/components/admin/AdminRosterRow';
 
+/**
+ * Server Component for the Admin Roster Dashboard.
+ * Displays student grades, allows CSV uploads, and manual student additions.
+ */
 export default async function AdminRosterPage() {
   const grades = await getAllGrades();
   const getGradeColor = (percentage: number) => {

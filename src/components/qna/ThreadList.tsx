@@ -4,6 +4,15 @@ import { Badge } from '@/components/ui/Badge';
 import { formatDistanceToNow } from 'date-fns';
 import { Lock, Globe, CheckCircle, Clock } from 'lucide-react';
 
+/**
+ * UI Component for rendering a list of Q&A threads.
+ * Displays unread counts, latest message snippets, and priority/privacy icons.
+ * 
+ * @param {ChatThread[]} threads - The array of thread objects to render.
+ * @param {string} activeId - The ID of the currently selected thread (for styling).
+ * @param {Function} onSelect - Callback triggered when a thread is clicked.
+ * @param {User} currentUser - The current authenticated user.
+ */
 export function ThreadList({ 
   threads, 
   activeId, 

@@ -3,6 +3,11 @@ import NextAuth from "next-auth";
 import { prisma } from "./prisma";
 import { authConfig } from "./auth.config";
 
+/**
+ * NextAuth initialization with PrismaAdapter.
+ * Handles signIn whitelist logic, DB synchronization, and token/session enrichment.
+ * Implements bootstrap mode: the first user on an empty DB is made ADMIN.
+ */
 export const { handlers, signIn, signOut, auth } = NextAuth({
   ...authConfig,
   adapter: PrismaAdapter(prisma),

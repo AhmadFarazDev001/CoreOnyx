@@ -3,7 +3,7 @@
 import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
-import { Hexagon } from "lucide-react"; // Using Lucide icon for logo placeholder
+import { Hexagon } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 
 function LoginContent() {
@@ -72,6 +72,10 @@ function LoginContent() {
   );
 }
 
+/**
+ * Primary authentication gateway.
+ * Renders a premium login experience and handles OAuth redirects.
+ */
 export default function LoginPage() {
   return (
     <Suspense fallback={<div className="flex min-h-screen bg-black" />}>

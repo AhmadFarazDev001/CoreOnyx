@@ -1,6 +1,10 @@
 import { LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+/**
+ * Reusable component for displaying empty states across the application.
+ * Used when lists are empty or content is unavailable.
+ */
 export interface EmptyStateProps {
   icon: LucideIcon;
   title: string;

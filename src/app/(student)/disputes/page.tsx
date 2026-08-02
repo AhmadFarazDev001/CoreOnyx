@@ -9,6 +9,10 @@ import { Button } from '@/components/ui/Button';
 import { NewDisputeButton } from '@/components/disputes/NewDisputeButton';
 import { cn } from '@/lib/utils';
 
+/**
+ * Server Component for the Student Disputes portal.
+ * Allows students to view, track, and interact with their grading disputes.
+ */
 export default async function StudentDisputesPage({
   searchParams,
 }: {
@@ -37,8 +41,6 @@ export default async function StudentDisputesPage({
     );
   }
 
-  // For desktop, default to the first ticket if no ID is selected.
-  // For mobile, we use the presence of params.id to trigger the sliding overlay.
   const activeTicket = params.id 
     ? myDisputes.find((s) => s.id === params.id) 
     : myDisputes[0];
@@ -59,7 +61,7 @@ export default async function StudentDisputesPage({
   return (
     <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 max-w-[1400px] mx-auto h-[calc(100vh-140px)]">
       
-      {/* Left Sidebar: List of tickets */}
+      {/* Ticket List Sidebar */}
       <div className={cn(
         "w-full lg:w-[350px] flex flex-col gap-4 overflow-y-auto pr-2 pb-6 lg:pb-0 transition-transform duration-300",
         "animate-page-in"
@@ -71,7 +73,7 @@ export default async function StudentDisputesPage({
           <NewDisputeButton size="sm" className="px-3" showLabel={false} />
         </div>
         
-        {/* Mobile New button */}
+        {/* Mobile Action */}
         <div className="lg:hidden mb-2">
            <NewDisputeButton className="w-full gap-2 justify-center" showLabel={true} />
         </div>
@@ -85,7 +87,7 @@ export default async function StudentDisputesPage({
         </div>
       </div>
 
-      {/* Right Content: Ticket View (Desktop) or Sliding Overlay (Mobile) */}
+      {/* Active Ticket View */}
       <div className={cn(
         "flex-1 flex-col min-w-0 bg-[var(--bg-primary)] lg:bg-transparent",
         "fixed inset-0 z-50 lg:static lg:flex lg:z-auto transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
@@ -93,7 +95,7 @@ export default async function StudentDisputesPage({
           ? "translate-y-0 flex pt-16 lg:pt-0 px-4 lg:px-0 pb-[env(safe-area-inset-bottom)] lg:pb-0" 
           : "translate-y-[100%] lg:translate-y-0 hidden lg:flex"
       )}>
-        {/* Mobile Header / Close Button inside the sliding overlay */}
+        {/* Mobile Header */}
         <div className="lg:hidden flex items-center justify-between gap-2 mb-4 shrink-0">
           <h2 className="text-lg font-bold text-[var(--text-primary)] truncate">
             {activeTicket?.subject || 'Select a Ticket'}

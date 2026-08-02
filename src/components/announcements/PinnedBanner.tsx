@@ -3,6 +3,12 @@ import { Pin } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { sanitizeHtml } from '@/lib/sanitize';
 
+/**
+ * UI Component for displaying the top-pinned announcement.
+ * Renders a distinct banner with highlight styling.
+ * 
+ * @param {Announcement} announcement - The pinned announcement object.
+ */
 export function PinnedBanner({ announcement }: { announcement: Announcement }) {
   return (
     <div className="bg-[var(--accent-muted)] border-l-4 border-[var(--accent-primary)] rounded-xl p-4 mb-6 flex items-start gap-3">

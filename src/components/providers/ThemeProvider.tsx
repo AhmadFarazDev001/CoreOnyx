@@ -12,6 +12,11 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
+/**
+ * Client-side Theme Provider using Context API.
+ * Manages light/dark mode state and syncs it with localStorage and the HTML root element.
+ * Prevents hydration mismatches while allowing instant rendering.
+ */
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   // Default to dark, but we will sync with localStorage immediately on mount
   const [theme, setThemeState] = useState<Theme>('dark');

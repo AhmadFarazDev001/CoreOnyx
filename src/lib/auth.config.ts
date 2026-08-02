@@ -1,6 +1,10 @@
 import type { NextAuthConfig } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
+/**
+ * Core NextAuth configuration object containing providers, session strategy,
+ * pages, and the base jwt/session callbacks.
+ */
 export const authConfig = {
   providers: [
     GoogleProvider({

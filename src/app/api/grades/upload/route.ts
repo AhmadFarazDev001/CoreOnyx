@@ -3,6 +3,10 @@ import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import Papa from 'papaparse';
 
+/**
+ * API Route Handler for bulk grade uploads via CSV.
+ * Validates admin role and CSRF headers before parsing and upserting student grades.
+ */
 export async function POST(request: Request) {
   try {
     const session = await auth();

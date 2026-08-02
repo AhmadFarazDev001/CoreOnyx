@@ -2,6 +2,9 @@ import { Button } from '@/components/ui/Button';
 import { SearchX } from 'lucide-react';
 import Link from 'next/link';
 
+/**
+ * Custom 404 UI for unresolved routes.
+ */
 export default function NotFound() {
   return (
     <div className="flex flex-col items-center justify-center min-h-[calc(100vh-100px)] p-8">

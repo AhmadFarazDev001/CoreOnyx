@@ -1,5 +1,8 @@
 import { Loader2 } from "lucide-react";
 
+/**
+ * Global suspense fallback UI displayed during server-side page transitions.
+ */
 export default function Loading() {
   return (
     <div className="flex-1 flex flex-col items-center justify-center min-h-[calc(100vh-140px)] gap-4 animate-page-in">

@@ -6,6 +6,10 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { addStudentToWhitelist } from '@/lib/actions/users';
 
+/**
+ * Client component modal for manually adding a student to the whitelist.
+ * Allows admins to bypass the CSV upload for single-student additions.
+ */
 export function AddStudentModal() {
   const [isOpen, setIsOpen] = useState(false);
   const [email, setEmail] = useState('');

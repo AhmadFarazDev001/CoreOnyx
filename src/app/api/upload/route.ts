@@ -2,6 +2,10 @@ import { handleUpload, type HandleUploadBody } from '@vercel/blob/client';
 import { NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 
+/**
+ * API Route Handler for file uploads to Vercel Blob.
+ * Secures uploads by validating admin role and CSRF headers before generating an upload token.
+ */
 export async function POST(request: Request): Promise<NextResponse> {
   const body = (await request.json()) as HandleUploadBody;
 

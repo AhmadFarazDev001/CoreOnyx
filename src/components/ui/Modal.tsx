@@ -13,6 +13,10 @@ export interface ModalProps {
   className?: string;
 }
 
+/**
+ * Reusable modal component utilizing React Portals.
+ * Locks body scroll when open and supports backdrop clicking to close.
+ */
 export function Modal({ isOpen, onClose, title, children, className }: ModalProps) {
   const [mounted, setMounted] = useState(false);
 

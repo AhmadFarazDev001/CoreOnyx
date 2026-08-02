@@ -2,6 +2,12 @@ import { Solution } from '@/lib/types';
 import { codeToHtml } from 'shiki';
 import { ConsoleOutput } from './ConsoleOutput';
 
+/**
+ * Server component for displaying syntax-highlighted code.
+ * Uses shiki for high-performance server-side syntax highlighting.
+ * 
+ * @param {Solution} solution - The solution object containing code and language.
+ */
 export async function CodeViewer({ solution }: { solution: Solution }) {
   // Server-side syntax highlighting
   const html = await codeToHtml(solution.code, {

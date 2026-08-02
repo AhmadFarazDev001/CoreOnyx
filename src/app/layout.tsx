@@ -24,6 +24,10 @@ export const metadata: Metadata = {
   description: 'Your course companion, built for clarity.',
 };
 
+/**
+ * Root application layout providing global font definitions,
+ * theme management, and authentication context.
+ */
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -65,7 +69,6 @@ export default function RootLayout({
             {children}
           </ThemeProvider>
         </AuthProvider>
-
       </body>
     </html>
   );

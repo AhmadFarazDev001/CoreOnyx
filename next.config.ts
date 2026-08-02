@@ -1,5 +1,9 @@
 import type { NextConfig } from "next";
 
+/**
+ * Next.js configuration and Content Security Policy (CSP) headers.
+ * Configured to allow Next.js hot-reloading in dev and secure defaults in production.
+ */
 const nextConfig: NextConfig = {
   allowedDevOrigins: [
     'localhost',

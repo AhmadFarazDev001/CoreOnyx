@@ -5,6 +5,10 @@ export const metadata: Metadata = {
   description: 'Login to access your CoreOnyx dashboard.',
 };
 
+/**
+ * Base layout for authentication routes.
+ * Provides a clean, unencumbered canvas for login and onboarding flows.
+ */
 export default function AuthLayout({
   children,
 }: {

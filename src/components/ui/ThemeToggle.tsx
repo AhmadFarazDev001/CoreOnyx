@@ -4,6 +4,10 @@ import { useTheme } from '@/hooks/useTheme';
 import { Sun, Moon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
+/**
+ * A client component that toggles the global theme between light and dark modes.
+ * Uses an animated sun/moon icon transition.
+ */
 export function ThemeToggle() {
   const { theme, toggleTheme } = useTheme();
   const [mounted, setMounted] = useState(false);

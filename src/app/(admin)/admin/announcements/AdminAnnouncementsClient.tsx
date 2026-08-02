@@ -8,6 +8,10 @@ import { AnnouncementCard } from '@/components/announcements/AnnouncementCard';
 import { Announcement } from '@/lib/types';
 import { createAnnouncement, deleteAnnouncement } from '@/lib/actions/announcements';
 
+/**
+ * Client component for managing course announcements.
+ * Handles the creation, preview, and deletion of announcements via Server Actions.
+ */
 export function AdminAnnouncementsClient({ announcements }: { announcements: Announcement[] }) {
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
@@ -31,7 +35,6 @@ export function AdminAnnouncementsClient({ announcements }: { announcements: Ann
       setBody('');
       setIsPinned(false);
       setPriority('NORMAL');
-      // No router.push needed because server action revalidatePath will auto-update the page data
     } catch (error) {
       console.error(error);
     } finally {

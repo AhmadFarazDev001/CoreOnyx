@@ -1,7 +1,7 @@
 <div align="center">
   
   # 💎 CoreOnyx
-  **Your intelligent cource companion, built for clarity.**
+  **Your intelligent course companion, built for clarity.**
 
   <br />
   

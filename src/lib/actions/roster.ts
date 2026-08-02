@@ -5,6 +5,10 @@ import { requireAdmin } from "@/lib/auth-guard";
 import { revalidatePath } from "next/cache";
 import { emailWhitelistSchema, bulkEmailWhitelistSchema } from "@/lib/validations";
 
+/**
+ * Retrieves the full list of whitelisted student emails.
+ * Requires ADMIN role.
+ */
 export async function getWhitelistedEmails() {
   await requireAdmin();
 
@@ -13,6 +17,10 @@ export async function getWhitelistedEmails() {
   });
 }
 
+/**
+ * Adds a single email to the whitelist.
+ * Requires ADMIN role. Validates email format and ensures uniqueness.
+ */
 export async function addEmailToWhitelist(email: string) {
   await requireAdmin();
   const validated = emailWhitelistSchema.parse({ email });
@@ -33,6 +41,10 @@ export async function addEmailToWhitelist(email: string) {
   return result;
 }
 
+/**
+ * Removes an email from the whitelist.
+ * Requires ADMIN role.
+ */
 export async function removeEmailFromWhitelist(email: string) {
   await requireAdmin();
 
@@ -44,6 +56,10 @@ export async function removeEmailFromWhitelist(email: string) {
   return { success: true };
 }
 
+/**
+ * Bulk adds a list of emails to the whitelist.
+ * Requires ADMIN role. Filters out already existing emails before inserting.
+ */
 export async function bulkAddEmails(emails: string[]) {
   await requireAdmin();
   const validated = bulkEmailWhitelistSchema.parse({ emails });

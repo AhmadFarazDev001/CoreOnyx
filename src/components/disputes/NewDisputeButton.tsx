@@ -5,6 +5,10 @@ import { Button } from '@/components/ui/Button';
 import { Plus } from 'lucide-react';
 import { NewDisputeModal } from './NewDisputeModal';
 
+/**
+ * Client component button that triggers the NewDisputeModal.
+ * Supports customizable variants, sizes, and labels for use in different contexts.
+ */
 export function NewDisputeButton({ 
   className,
   variant = 'primary',

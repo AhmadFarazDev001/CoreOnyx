@@ -6,6 +6,12 @@ import { revalidatePath } from "next/cache";
 import { threadSchema, messageSchema } from "@/lib/validations";
 import { checkRateLimit } from "@/lib/rate-limit";
 
+/**
+ * Fetches chat threads based on the given type (PUBLIC or PRIVATE).
+ * For STUDENTS, it restricts access to only PUBLIC threads and their own PRIVATE threads.
+ * For ADMINS, it returns all matching threads.
+ * Calculates unread message counts for the current user.
+ */
 export async function getThreads(type?: "PUBLIC" | "PRIVATE") {
   const { session } = await requireAuth();
 
@@ -66,6 +72,10 @@ export async function getThreads(type?: "PUBLIC" | "PRIVATE") {
   });
 }
 
+/**
+ * Creates a new Q&A chat thread.
+ * Associates the thread with the authenticated user and optionally another participant (if admin).
+ */
 export async function createThread(data: { title: string; type: "PUBLIC" | "PRIVATE"; participantUserId?: string }) {
   const { session } = await requireAuth();
   const validated = threadSchema.parse(data);
@@ -90,6 +100,10 @@ export async function createThread(data: { title: string; type: "PUBLIC" | "PRIV
   return thread;
 }
 
+/**
+ * Sends a message within a specific chat thread.
+ * Checks rate limits and ensures the user is a participant or an admin before sending.
+ */
 export async function sendMessage(threadId: string, content: string, isCodeSnippet: boolean = false) {
   const { session } = await requireAuth();
   
@@ -134,6 +148,10 @@ export async function sendMessage(threadId: string, content: string, isCodeSnipp
   return message;
 }
 
+/**
+ * Converts an existing thread into a publicly visible FAQ.
+ * Requires ADMIN role.
+ */
 export async function convertToFAQ(threadId: string) {
   await requireAdmin();
 
@@ -150,6 +168,10 @@ export async function convertToFAQ(threadId: string) {
   return { success: true };
 }
 
+/**
+ * Marks a thread as resolved.
+ * Requires ADMIN role.
+ */
 export async function resolveThread(threadId: string) {
   await requireAdmin();
 
@@ -165,6 +187,10 @@ export async function resolveThread(threadId: string) {
   return { success: true };
 }
 
+/**
+ * Deletes a chat thread.
+ * Requires ADMIN role.
+ */
 export async function deleteThread(threadId: string) {
   await requireAdmin();
 
@@ -177,6 +203,10 @@ export async function deleteThread(threadId: string) {
   return { success: true };
 }
 
+/**
+ * Retrieves a list of users for admins to select when creating a private thread.
+ * Requires ADMIN role.
+ */
 export async function getChatUsers() {
   const { session, dbUser } = await requireAuth();
   if (dbUser.role !== "ADMIN") return [];
@@ -187,6 +217,10 @@ export async function getChatUsers() {
   });
 }
 
+/**
+ * Marks a specific thread as read by updating the user's lastReadAt timestamp.
+ * Silently fails if the user lacks permission instead of throwing an error.
+ */
 export async function markThreadAsRead(threadId: string) {
   const { session } = await requireAuth();
 

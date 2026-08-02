@@ -1,6 +1,10 @@
 import { getStudentGrades } from '@/lib/actions/grades';
 import { GradeTable } from '@/components/grades/GradeTable';
 
+/**
+ * Server Component for the Student Grades page.
+ * Fetches the authenticated student's grade records and displays them in a unified table.
+ */
 export default async function StudentGradesPage() {
   const studentGrades = await getStudentGrades();
 

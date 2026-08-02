@@ -4,6 +4,12 @@ import { useState } from 'react';
 import { Terminal, ChevronUp, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+/**
+ * Client component for rendering console output of code solutions.
+ * Supports a collapsible accordion view with basic syntax highlighting for errors and prompt lines.
+ * 
+ * @param {string} output - The raw console output string.
+ */
 export function ConsoleOutput({ output }: { output: string }) {
   const [isExpanded, setIsExpanded] = useState(false);
 

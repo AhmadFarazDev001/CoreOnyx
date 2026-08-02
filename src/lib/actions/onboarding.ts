@@ -4,6 +4,10 @@ import { prisma } from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth-guard";
 import { onboardingSchema } from "@/lib/validations";
 
+/**
+ * Completes the onboarding process for a newly registered user.
+ * Updates the user's name and marks them as onboarded.
+ */
 export async function completeOnboarding(formData: FormData) {
   const { session } = await requireAuth();
 
