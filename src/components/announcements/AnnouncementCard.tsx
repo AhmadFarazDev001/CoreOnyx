@@ -5,7 +5,7 @@ import { PriorityBadge } from './PriorityBadge';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
-import { ChevronDown, Sparkles } from 'lucide-react';
+import { ChevronDown, Sparkles, Pin } from 'lucide-react';
 import { sanitizeHtml } from '@/lib/sanitize';
 
 /**
@@ -59,7 +59,13 @@ export function AnnouncementCard({
         <div className="pointer-events-none w-full flex items-center justify-between">
           <div className="flex items-center gap-2">
             <PriorityBadge priority={announcement.priority} />
-            {isLatest && (
+            {announcement.isPinned && (
+              <div className="flex items-center gap-1 bg-[var(--accent-muted)] text-[var(--accent-primary)] px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider">
+                <Pin className="w-3 h-3" />
+                Pinned
+              </div>
+            )}
+            {isLatest && !announcement.isPinned && (
               <div className="flex items-center gap-1 bg-[var(--accent-muted)] text-[var(--accent-primary)] px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider">
                 <Sparkles className="w-3 h-3" />
                 Latest
