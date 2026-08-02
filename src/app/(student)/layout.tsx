@@ -5,6 +5,8 @@ import { prisma } from '@/lib/prisma';
 import { Metadata } from 'next';
 import { SecurityGuard } from '@/components/shared/SecurityGuard';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'Student Dashboard | CoreOnyx',
   description: 'Your lab companion, built for clarity.',

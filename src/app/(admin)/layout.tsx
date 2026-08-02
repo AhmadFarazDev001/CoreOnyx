@@ -4,6 +4,8 @@ import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import { Metadata } from 'next';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'Admin Dashboard | CoreOnyx',
   description: 'Manage students, tickets, and announcements.',
