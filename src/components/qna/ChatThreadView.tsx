@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { ChatThread, ChatMessage, User } from '@/lib/types';
-import { Input } from '@/components/ui/Input';
+import { Input, Textarea } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
 import { Send, Lock, Globe, AlertTriangle } from 'lucide-react';
@@ -195,10 +195,10 @@ export function ChatThreadView({
           <p className="text-sm text-[var(--text-secondary)]">This thread has been marked as resolved by a TA.</p>
         </div>
       ) : (
-        <div className="p-4 bg-[var(--bg-tertiary)]/50 border-t border-[var(--border-subtle)] flex gap-2">
-          <Input 
-            placeholder="Type a message..." 
-            className="flex-1 bg-[var(--bg-secondary)]" 
+        <div className="p-4 bg-[var(--bg-tertiary)]/50 border-t border-[var(--border-subtle)] flex items-end gap-2">
+          <Textarea 
+            placeholder="Type a message... (Shift+Enter for new line)" 
+            className="flex-1 bg-[var(--bg-secondary)] min-h-[44px] max-h-32 resize-none py-3" 
             value={content}
             onChange={(e) => setContent(e.target.value)}
             onKeyDown={(e) => {
@@ -208,8 +208,9 @@ export function ChatThreadView({
               }
             }}
             disabled={isSending}
+            rows={1}
           />
-          <Button variant="primary" className="px-3" onClick={handleSend} disabled={!content.trim() || isSending}>
+          <Button variant="primary" className="px-3 h-[44px]" onClick={handleSend} disabled={!content.trim() || isSending}>
             <Send className="w-4 h-4" />
           </Button>
         </div>
