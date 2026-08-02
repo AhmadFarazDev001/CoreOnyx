@@ -8,7 +8,7 @@ import { ConsoleOutput } from './ConsoleOutput';
  * 
  * @param {Solution} solution - The solution object containing code and language.
  */
-export async function CodeViewer({ solution }: { solution: Solution }) {
+export async function CodeViewer({ solution }: { solution: Solution & { type?: string } }) {
   // Server-side syntax highlighting
   const html = await codeToHtml(solution.code, {
     lang: solution.language,
@@ -19,7 +19,7 @@ export async function CodeViewer({ solution }: { solution: Solution }) {
     <div className="flex flex-col h-[calc(100vh-180px)] bg-[var(--editor-bg)] rounded-2xl border border-[var(--border-subtle)] overflow-hidden shadow-lg animate-page-in">
       <div className="flex items-center px-4 py-3 border-b border-[var(--editor-gutter)] bg-[var(--bg-secondary)]">
         <h2 className="text-sm font-semibold text-[var(--text-primary)]">
-          Quiz {solution.labNumber}: {solution.title}
+          {solution.type || 'Quiz'} {solution.labNumber}: {solution.title}
         </h2>
       </div>
 

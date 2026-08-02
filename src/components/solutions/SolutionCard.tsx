@@ -15,7 +15,7 @@ export function SolutionCard({
   solution, 
   isActive 
 }: { 
-  solution: Solution;
+  solution: Solution & { type?: string };
   isActive?: boolean;
 }) {
   return (
@@ -30,7 +30,7 @@ export function SolutionCard({
           </div>
           <div>
             <div className="flex items-center gap-2 mb-1.5">
-              <Badge variant="general">Quiz {solution.labNumber}</Badge>
+              <Badge variant="general">{solution.type || 'Quiz'} {solution.labNumber}</Badge>
               <Badge variant="neutral" className="uppercase">{solution.language}</Badge>
             </div>
             <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-1">
