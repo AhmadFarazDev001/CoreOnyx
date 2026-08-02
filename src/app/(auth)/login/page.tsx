@@ -63,7 +63,7 @@ function LoginContent() {
               <div className="h-[1px] w-10 bg-gradient-to-l from-transparent to-white/20" />
             </div>
             <p className="text-xs text-indigo-200/50">
-              Only @nu.edu.pk accounts are accepted
+              Only authorized and whitelisted accounts can access the platform
             </p>
           </div>
         </div>
