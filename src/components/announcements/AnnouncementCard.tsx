@@ -72,7 +72,7 @@ export function AnnouncementCard({
           </div>
         </div>
 
-        <h3 className="pointer-events-none text-lg font-semibold text-[var(--text-primary)] pr-8">
+        <h3 className="pointer-events-none text-lg font-semibold text-[var(--text-primary)] pr-8 break-words">
           {announcement.title}
         </h3>
       </div>
@@ -87,7 +87,7 @@ export function AnnouncementCard({
         <div className="overflow-hidden">
           <div className="p-5 pt-0">
             <div 
-              className="text-sm text-[var(--text-secondary)] leading-relaxed mb-4 prose prose-invert max-w-none"
+              className="text-sm text-[var(--text-secondary)] leading-relaxed mb-4 prose prose-invert max-w-none break-words"
               dangerouslySetInnerHTML={{ __html: sanitizeHtml(announcement.body) }}
             />
 

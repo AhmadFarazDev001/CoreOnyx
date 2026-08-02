@@ -22,11 +22,11 @@ export function PinnedBanner({ announcement }: { announcement: Announcement }) {
             • {formatDistanceToNow(new Date(announcement.createdAt), { addSuffix: true })}
           </span>
         </div>
-        <h3 className="text-base font-semibold text-[var(--text-primary)] mb-1">
+        <h3 className="text-base font-semibold text-[var(--text-primary)] mb-1 break-words">
           {announcement.title}
         </h3>
         <div 
-          className="text-sm text-[var(--text-secondary)] line-clamp-2"
+          className="text-sm text-[var(--text-secondary)] line-clamp-2 break-words"
           dangerouslySetInnerHTML={{ __html: sanitizeHtml(announcement.body) }}
         />
       </div>
