@@ -166,7 +166,7 @@ export function AdminAnnouncementsClient({ announcements }: { announcements: Ann
                   index={i} 
                   isLatest={i === 0 && !announcement.isPinned} 
                 />
-                <div className="absolute top-4 right-12 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-2">
+                <div className="absolute top-4 right-12 flex items-center gap-2">
                   <button
                     onClick={() => handleTogglePin(announcement.id, announcement.isPinned)}
                     disabled={pinningId === announcement.id}

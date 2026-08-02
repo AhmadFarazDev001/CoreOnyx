@@ -4,10 +4,13 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Input, Textarea } from '@/components/ui/Input';
 import { Card } from '@/components/ui/Card';
-import { Code2, Trash2, X } from 'lucide-react';
+import { Code2, Trash2, X, ChevronDown } from 'lucide-react';
 import { createSolution, deleteSolution } from '@/lib/actions/solutions';
 import { Solution, Annotation } from '@/lib/types';
 import { formatDistanceToNow } from 'date-fns';
+import { CodeViewer } from '@/components/solutions/CodeViewer';
+import { ConsoleOutput } from '@/components/solutions/ConsoleOutput';
+import { cn } from '@/lib/utils';
 
 /**
  * Client component for managing code solutions.
@@ -19,6 +22,7 @@ export function AdminSolutionsClient({ solutions }: { solutions: Solution[] }) {
   const [code, setCode] = useState('');
   const [output, setOutput] = useState('');
   const [language, setLanguage] = useState('cpp');
+  const [type, setType] = useState('Quiz');
   const [loading, setLoading] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
@@ -63,6 +67,7 @@ export function AdminSolutionsClient({ solutions }: { solutions: Solution[] }) {
     try {
       await createSolution({
         title,
+        type: type,
         labNumber: parseInt(labNumber),
         language: language,
         code: code,
@@ -105,7 +110,7 @@ export function AdminSolutionsClient({ solutions }: { solutions: Solution[] }) {
               <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-4">Solution Details</h2>
               <div className="space-y-4">
                 <div className="grid grid-cols-4 gap-4">
-                  <div className="col-span-3">
+                  <div className="col-span-2">
                     <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">Title</label>
                     <Input 
                       value={title}
@@ -114,6 +119,30 @@ export function AdminSolutionsClient({ solutions }: { solutions: Solution[] }) {
                     />
                   </div>
                   <div className="col-span-1">
+                    <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">Type</label>
+                    <select
+                      value={type}
+                      onChange={(e) => setType(e.target.value)}
+                      className="flex h-10 w-full items-center justify-between rounded-xl border border-[var(--border-default)] bg-[var(--bg-tertiary)] px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[var(--accent-primary)] focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 text-[var(--text-primary)]"
+                    >
+                      <option value="Lab">Lab</option>
+                      <option value="Quiz">Quiz</option>
+                      <option value="Assignment">Assignment</option>
+                    </select>
+                  </div>
+                  <div className="col-span-1">
+                    <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">{type} #</label>
+                    <Input 
+                      type="number"
+                      value={labNumber}
+                      onChange={(e) => setLabNumber(e.target.value)}
+                      placeholder="e.g. 4"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-4 gap-4">
+                  <div className="col-span-4 lg:col-span-2">
                     <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">Language</label>
                     <select
                       value={language}
@@ -193,32 +222,84 @@ export function AdminSolutionsClient({ solutions }: { solutions: Solution[] }) {
           {solutions.length === 0 ? (
             <p className="text-[var(--text-secondary)] text-sm">No solutions published yet.</p>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-6">
               {solutions.map((solution) => (
-                <Card key={solution.id} className="p-5 flex flex-col relative group">
-                  <div className="flex justify-between items-start mb-2">
-                    <div>
-                      <span className="text-xs font-bold text-[var(--accent-primary)] tracking-wider uppercase">Quiz {solution.labNumber}</span>
-                      <h3 className="text-lg font-semibold text-[var(--text-primary)] mt-1">{solution.title}</h3>
-                    </div>
-                    <button
-                      onClick={() => handleDelete(solution.id)}
-                      disabled={deletingId === solution.id}
-                      className="p-2 bg-[var(--bg-primary)] border border-[var(--status-urgent)] text-[var(--status-urgent)] rounded-full opacity-0 group-hover:opacity-100 transition-opacity disabled:opacity-50 hover:bg-[var(--status-urgent)] hover:text-white"
-                      title="Delete Solution"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </div>
-                  <div className="mt-auto pt-4 flex items-center gap-4 text-xs text-[var(--text-secondary)]">
-                    <span>{formatDistanceToNow(new Date(solution.createdAt), { addSuffix: true })}</span>
-                  </div>
-                </Card>
+                <ExpandableSolutionCard 
+                  key={solution.id} 
+                  solution={solution} 
+                  deletingId={deletingId} 
+                  handleDelete={handleDelete} 
+                />
               ))}
             </div>
           )}
         </div>
       </div>
     </div>
+  );
+}
+
+function ExpandableSolutionCard({ 
+  solution, 
+  deletingId, 
+  handleDelete 
+}: { 
+  solution: Solution & { type?: string }; 
+  deletingId: string | null; 
+  handleDelete: (id: string) => void;
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <Card className="flex flex-col relative group overflow-hidden border-[var(--border-subtle)] hover:border-[var(--border-default)] transition-colors">
+      {/* Clickable Header */}
+      <div 
+        className="p-5 flex justify-between items-start cursor-pointer select-none"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <div>
+          <span className="text-xs font-bold text-[var(--accent-primary)] tracking-wider uppercase">
+            {solution.type || 'Quiz'} {solution.labNumber}
+          </span>
+          <h3 className="text-lg font-semibold text-[var(--text-primary)] mt-1">{solution.title}</h3>
+          <div className="mt-2 flex items-center gap-4 text-xs text-[var(--text-secondary)]">
+            <span className="capitalize">{solution.language}</span>
+            <span>•</span>
+            <span>{formatDistanceToNow(new Date(solution.createdAt), { addSuffix: true })}</span>
+          </div>
+        </div>
+        <div className="flex items-center gap-4">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDelete(solution.id);
+            }}
+            disabled={deletingId === solution.id}
+            className="p-2 bg-[var(--bg-primary)] border border-[var(--status-urgent)] text-[var(--status-urgent)] rounded-full transition-opacity disabled:opacity-50 hover:bg-[var(--status-urgent)] hover:text-white"
+            title="Delete Solution"
+          >
+            <Trash2 className="w-4 h-4" />
+          </button>
+          <ChevronDown className={cn("w-5 h-5 text-[var(--text-secondary)] transition-transform duration-300", isOpen && "rotate-180")} />
+        </div>
+      </div>
+
+      {/* Expandable Body */}
+      <div 
+        className={cn(
+          "grid transition-all duration-500 ease-in-out border-t border-[var(--border-subtle)]",
+          isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+        )}
+      >
+        <div className="overflow-hidden">
+          <div className="p-5 space-y-6">
+            <CodeViewer solution={solution as any} />
+            {solution.consoleOutput && (
+              <ConsoleOutput output={solution.consoleOutput} />
+            )}
+          </div>
+        </div>
+      </div>
+    </Card>
   );
 }

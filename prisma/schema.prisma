@@ -91,6 +91,7 @@ model Announcement {
 model Solution {
   id            String       @id @default(cuid())
   title         String
+  type          String       @default("Quiz")
   labNumber     Int
   language      String       @default("cpp")
   code          String       @db.Text

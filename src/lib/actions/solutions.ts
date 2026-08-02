@@ -43,6 +43,7 @@ export async function getSolutionById(id: string) {
  */
 export async function createSolution(data: {
   title: string;
+  type: string;
   labNumber: number;
   language: string;
   code: string;
@@ -55,6 +56,7 @@ export async function createSolution(data: {
   const solution = await prisma.solution.create({
     data: {
       title: validated.title,
+      type: validated.type,
       labNumber: validated.labNumber,
       language: validated.language,
       code: validated.code,

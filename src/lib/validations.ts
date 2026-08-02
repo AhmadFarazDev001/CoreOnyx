@@ -32,6 +32,7 @@ export const disputeSchema = z.object({
 
 export const solutionSchema = z.object({
   title: z.string().min(1).max(150),
+  type: z.string().min(1).max(50),
   labNumber: z.number().int().min(1).max(100),
   language: z.string().min(1).max(20),
   code: z.string().min(1).max(20000), // Max 20KB code
