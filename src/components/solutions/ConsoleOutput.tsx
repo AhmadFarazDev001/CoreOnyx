@@ -36,7 +36,7 @@ export function ConsoleOutput({ output }: { output: string }) {
       {/* Terminal Content */}
       <div 
         className={cn(
-          'bg-[var(--editor-bg)] font-mono text-sm overflow-y-auto transition-all duration-300',
+          'bg-[var(--editor-bg)] font-mono text-sm overflow-auto whitespace-pre transition-all duration-300',
           isExpanded ? 'h-[200px] p-4' : 'h-0 p-0'
         )}
       >

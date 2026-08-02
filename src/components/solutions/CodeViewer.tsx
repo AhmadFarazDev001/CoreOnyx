@@ -23,7 +23,7 @@ export async function CodeViewer({ solution }: { solution: Solution }) {
         </h2>
       </div>
 
-      <div className="flex-1 overflow-auto relative min-w-max">
+      <div className="flex-1 overflow-auto relative min-w-0 w-full">
         <div 
           className="shiki-container font-mono text-sm"
           dangerouslySetInnerHTML={{ __html: html }}
