@@ -78,7 +78,7 @@ export function AnnouncementCard({
             <span className="hidden sm:inline-block">{formatDistanceToNow(new Date(announcement.createdAt), { addSuffix: true })}</span>
             {adminActions && (
               <div 
-                className="flex items-center gap-2 ml-2" 
+                className="flex items-center gap-2 ml-2 pointer-events-auto" 
                 onClick={(e) => e.stopPropagation()}
               >
                 {adminActions}
