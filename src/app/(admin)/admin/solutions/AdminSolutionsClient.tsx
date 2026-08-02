@@ -5,18 +5,22 @@ import { Button } from '@/components/ui/Button';
 import { Input, Textarea } from '@/components/ui/Input';
 import { Card } from '@/components/ui/Card';
 import { Code2, Trash2, X, ChevronDown } from 'lucide-react';
+import { formatDistanceToNow } from 'date-fns';
+import { cn } from '@/lib/utils';
 import { createSolution, deleteSolution } from '@/lib/actions/solutions';
 import { Solution, Annotation } from '@/lib/types';
-import { formatDistanceToNow } from 'date-fns';
-import { CodeViewer } from '@/components/solutions/CodeViewer';
-import { ConsoleOutput } from '@/components/solutions/ConsoleOutput';
-import { cn } from '@/lib/utils';
 
 /**
  * Client component for managing code solutions.
  * Provides a UI for publishing, formatting, and deleting golden solutions for lab assignments.
  */
-export function AdminSolutionsClient({ solutions }: { solutions: Solution[] }) {
+export function AdminSolutionsClient({ 
+  solutions,
+  viewers
+}: { 
+  solutions: Solution[];
+  viewers: React.ReactNode[];
+}) {
   const [title, setTitle] = useState('');
   const [labNumber, setLabNumber] = useState('');
   const [code, setCode] = useState('');
@@ -223,12 +227,13 @@ export function AdminSolutionsClient({ solutions }: { solutions: Solution[] }) {
             <p className="text-[var(--text-secondary)] text-sm">No solutions published yet.</p>
           ) : (
             <div className="grid grid-cols-1 gap-6">
-              {solutions.map((solution) => (
+              {solutions.map((solution, i) => (
                 <ExpandableSolutionCard 
                   key={solution.id} 
                   solution={solution} 
                   deletingId={deletingId} 
-                  handleDelete={handleDelete} 
+                  handleDelete={handleDelete}
+                  codeViewer={viewers[i]} 
                 />
               ))}
             </div>
@@ -242,11 +247,13 @@ export function AdminSolutionsClient({ solutions }: { solutions: Solution[] }) {
 function ExpandableSolutionCard({ 
   solution, 
   deletingId, 
-  handleDelete 
+  handleDelete,
+  codeViewer 
 }: { 
   solution: Solution & { type?: string }; 
   deletingId: string | null; 
   handleDelete: (id: string) => void;
+  codeViewer: React.ReactNode;
 }) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -293,10 +300,7 @@ function ExpandableSolutionCard({
       >
         <div className="overflow-hidden">
           <div className="p-5 space-y-6">
-            <CodeViewer solution={solution as any} />
-            {solution.consoleOutput && (
-              <ConsoleOutput output={solution.consoleOutput} />
-            )}
+            {codeViewer}
           </div>
         </div>
       </div>

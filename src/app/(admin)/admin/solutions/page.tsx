@@ -1,5 +1,6 @@
 import { getSolutions } from '@/lib/actions/solutions';
 import { AdminSolutionsClient } from './AdminSolutionsClient';
+import { CodeViewer } from '@/components/solutions/CodeViewer';
 
 /**
  * Server Component for the Admin Solutions Dashboard.
@@ -8,5 +9,9 @@ import { AdminSolutionsClient } from './AdminSolutionsClient';
 export default async function AdminSolutionsPage() {
   const solutions = await getSolutions();
   
-  return <AdminSolutionsClient solutions={solutions} />;
+  const viewers = solutions.map(solution => (
+    <CodeViewer key={solution.id} solution={solution as any} />
+  ));
+
+  return <AdminSolutionsClient solutions={solutions} viewers={viewers} />;
 }
