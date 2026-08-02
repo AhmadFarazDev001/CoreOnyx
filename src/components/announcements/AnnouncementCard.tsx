@@ -21,11 +21,13 @@ import { sanitizeHtml } from '@/lib/sanitize';
 export function AnnouncementCard({ 
   announcement, 
   index,
-  isLatest = false
+  isLatest = false,
+  adminActions
 }: { 
   announcement: Announcement; 
   index: number;
   isLatest?: boolean;
+  adminActions?: React.ReactNode;
 }) {
   const [isOpen, setIsOpen] = useState(isLatest);
 
@@ -73,12 +75,20 @@ export function AnnouncementCard({
             )}
           </div>
           <div className="flex items-center gap-3 text-xs text-[var(--text-secondary)]">
-            <span>{formatDistanceToNow(new Date(announcement.createdAt), { addSuffix: true })}</span>
-            <ChevronDown className={cn("w-4 h-4 transition-transform duration-300", isOpen && "rotate-180")} />
+            <span className="hidden sm:inline-block">{formatDistanceToNow(new Date(announcement.createdAt), { addSuffix: true })}</span>
+            {adminActions && (
+              <div 
+                className="flex items-center gap-2 ml-2" 
+                onClick={(e) => e.stopPropagation()}
+              >
+                {adminActions}
+              </div>
+            )}
+            <ChevronDown className={cn("w-4 h-4 transition-transform duration-300 ml-2", isOpen && "rotate-180")} />
           </div>
         </div>
 
-        <h3 className="pointer-events-none text-lg font-semibold text-[var(--text-primary)] pr-8 break-words">
+        <h3 className="pointer-events-none text-lg font-semibold text-[var(--text-primary)] pr-2 break-words">
           {announcement.title}
         </h3>
       </div>

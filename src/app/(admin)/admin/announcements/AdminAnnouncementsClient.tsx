@@ -165,29 +165,31 @@ export function AdminAnnouncementsClient({ announcements }: { announcements: Ann
                   announcement={announcement as any} 
                   index={i} 
                   isLatest={i === 0 && !announcement.isPinned} 
+                  adminActions={
+                    <>
+                      <button
+                        onClick={() => handleTogglePin(announcement.id, announcement.isPinned)}
+                        disabled={pinningId === announcement.id}
+                        className={`p-1.5 rounded-full border transition-colors disabled:opacity-50 ${
+                          announcement.isPinned 
+                            ? 'bg-[var(--accent-muted)] border-[var(--accent-primary)] text-[var(--accent-primary)] hover:bg-[var(--accent-primary)] hover:text-white' 
+                            : 'bg-[var(--bg-primary)] border-[var(--border-default)] text-[var(--text-secondary)] hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)]'
+                        }`}
+                        title={announcement.isPinned ? "Unpin Announcement" : "Pin Announcement"}
+                      >
+                        <Pin className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(announcement.id)}
+                        disabled={deletingId === announcement.id}
+                        className="p-1.5 bg-[var(--bg-primary)] border border-[var(--status-urgent)] text-[var(--status-urgent)] rounded-full hover:bg-[var(--status-urgent)] hover:text-white transition-colors disabled:opacity-50"
+                        title="Delete Announcement"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </>
+                  }
                 />
-                <div className="absolute top-4 right-12 flex items-center gap-2">
-                  <button
-                    onClick={() => handleTogglePin(announcement.id, announcement.isPinned)}
-                    disabled={pinningId === announcement.id}
-                    className={`p-2 rounded-full border transition-colors disabled:opacity-50 ${
-                      announcement.isPinned 
-                        ? 'bg-[var(--accent-muted)] border-[var(--accent-primary)] text-[var(--accent-primary)] hover:bg-[var(--accent-primary)] hover:text-white' 
-                        : 'bg-[var(--bg-primary)] border-[var(--border-default)] text-[var(--text-secondary)] hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)]'
-                    }`}
-                    title={announcement.isPinned ? "Unpin Announcement" : "Pin Announcement"}
-                  >
-                    <Pin className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(announcement.id)}
-                    disabled={deletingId === announcement.id}
-                    className="p-2 bg-[var(--bg-primary)] border border-[var(--status-urgent)] text-[var(--status-urgent)] rounded-full hover:bg-[var(--status-urgent)] hover:text-white transition-colors disabled:opacity-50"
-                    title="Delete Announcement"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
               </div>
             ))
           )}
