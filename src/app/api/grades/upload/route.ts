@@ -14,10 +14,20 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Strict CSRF Protection for API Route
+    // Robust CSRF Protection for API Route (works locally and on Vercel)
     const origin = request.headers.get('origin');
+    const host = request.headers.get('host') || request.headers.get('x-forwarded-host');
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-    if (!origin || origin !== appUrl) {
+
+    let isValidOrigin = false;
+    if (origin) {
+      const originHost = new URL(origin).host;
+      if (origin === appUrl || originHost === host) {
+        isValidOrigin = true;
+      }
+    }
+
+    if (!isValidOrigin) {
       return NextResponse.json({ error: 'CSRF rejected' }, { status: 403 });
     }
 
