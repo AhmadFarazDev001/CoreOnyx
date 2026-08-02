@@ -87,7 +87,7 @@ export function AnnouncementCard({
         <div className="overflow-hidden">
           <div className="p-5 pt-0">
             <div 
-              className="text-sm text-[var(--text-secondary)] leading-relaxed mb-4 prose prose-invert max-w-none break-words"
+              className="text-sm text-[var(--text-secondary)] leading-relaxed mb-4 prose prose-invert max-w-none break-words whitespace-pre-wrap"
               dangerouslySetInnerHTML={{ __html: sanitizeHtml(announcement.body) }}
             />
 

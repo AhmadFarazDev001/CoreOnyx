@@ -26,7 +26,7 @@ export function PinnedBanner({ announcement }: { announcement: Announcement }) {
           {announcement.title}
         </h3>
         <div 
-          className="text-sm text-[var(--text-secondary)] line-clamp-2 break-words"
+          className="text-sm text-[var(--text-secondary)] line-clamp-2 break-words whitespace-pre-wrap"
           dangerouslySetInnerHTML={{ __html: sanitizeHtml(announcement.body) }}
         />
       </div>
