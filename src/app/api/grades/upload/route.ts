@@ -96,18 +96,23 @@ export async function POST(request: Request) {
           }
 
           // Calculate absolute earned score
-          const absScore = max > 0 ? (score / max) * absMax : 0;
+          const absScoreRaw = max > 0 ? (score / max) * absMax : 0;
+          const absScore = parseFloat(absScoreRaw.toFixed(3)); // Round to 3 decimals
 
           assessments[baseKey] = {
             score,
             max,
             absMax,
-            absScore: parseFloat(absScore.toFixed(2)) // Round to 2 decimals for clean storage
+            absScore
           };
 
           totalAbsScore += absScore;
           totalAbsMax += absMax;
         }
+
+        // Final rounding for totals to prevent floating point inaccuracies
+        totalAbsScore = parseFloat(totalAbsScore.toFixed(3));
+        totalAbsMax = parseFloat(totalAbsMax.toFixed(3));
         
         await tx.gradeRecord.upsert({
           where: { studentEmail: email },
