@@ -32,7 +32,7 @@ export async function getAllGrades() {
 
 /**
  * Upserts (creates or updates) a grade record for a student.
- * Requires ADMIN role. Auto-whitelists the student email to allow them to view their grades.
+ * Requires ADMIN role.
  */
 export async function upsertGradeRecord(data: {
   studentEmail: string;
@@ -60,13 +60,6 @@ export async function upsertGradeRecord(data: {
       totalAbsScore: validated.totalAbsScore,
       totalAbsMax: validated.totalAbsMax,
     },
-  });
-
-  // Auto-whitelist the student so they can log in to view their grades
-  await prisma.whitelist.upsert({
-    where: { email: validated.studentEmail },
-    update: {},
-    create: { email: validated.studentEmail }
   });
 
   revalidatePath("/grades");

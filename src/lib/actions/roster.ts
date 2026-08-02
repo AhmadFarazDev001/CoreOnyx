@@ -81,3 +81,36 @@ export async function bulkAddEmails(emails: string[]) {
   revalidatePath("/admin/roster");
   return { success: true, addedCount: newEmails.length };
 }
+
+/**
+ * Retrieves the full list of whitelisted emails, along with their login/onboarded status.
+ * Requires ADMIN role.
+ */
+export async function getWhitelistWithStatus() {
+  await requireAdmin();
+
+  const whitelist = await prisma.whitelist.findMany({
+    orderBy: { createdAt: "desc" },
+  });
+
+  const emails = whitelist.map(w => w.email);
+
+  const users = await prisma.user.findMany({
+    where: { email: { in: emails } },
+    select: { email: true, onboarded: true, isBlocked: true },
+  });
+
+  // Map users by email for quick lookup
+  const userMap = new Map(users.map(u => [u.email, u]));
+
+  return whitelist.map(w => {
+    const user = userMap.get(w.email);
+    return {
+      email: w.email,
+      createdAt: w.createdAt,
+      hasLoggedIn: !!user,
+      isOnboarded: user?.onboarded ?? false,
+      isBlocked: user?.isBlocked ?? false,
+    };
+  });
+}

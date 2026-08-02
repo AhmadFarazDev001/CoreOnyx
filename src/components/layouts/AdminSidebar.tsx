@@ -16,7 +16,8 @@ import {
   LogOut,
   Menu,
   X,
-  Hexagon
+  Hexagon,
+  GraduationCap
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
@@ -25,6 +26,7 @@ const LINKS = [
   { name: 'Dashboard', path: '/admin/dashboard', icon: LayoutDashboard },
   { name: 'Announcements', path: '/admin/announcements', icon: Megaphone },
   { name: 'Solutions', path: '/admin/solutions', icon: Code2 },
+  { name: 'Grades', path: '/admin/grades', icon: GraduationCap },
   { name: 'Tickets', path: '/admin/tickets', icon: Ticket },
   { name: 'Q&A', path: '/admin/qna', icon: MessageCircle },
   { name: 'Roster', path: '/admin/roster', icon: Users },

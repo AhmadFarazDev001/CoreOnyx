@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { UserPlus, X } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import { addStudentToWhitelist } from '@/lib/actions/users';
+import { addEmailToWhitelist } from '@/lib/actions/roster';
 
 /**
  * Client component modal for manually adding a student to the whitelist.
@@ -24,7 +24,7 @@ export function AddStudentModal() {
     setError('');
     
     try {
-      await addStudentToWhitelist(email);
+      await addEmailToWhitelist(email);
       setIsOpen(false);
       setEmail('');
     } catch (err: any) {
