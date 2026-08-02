@@ -172,7 +172,7 @@ export function ChatThreadView({
                   </span>
                 </div>
                 <div 
-                  className={`px-4 py-2.5 rounded-2xl text-sm ${
+                  className={`px-4 py-2.5 rounded-2xl text-sm whitespace-pre-wrap ${
                     msg.sender.role === 'ADMIN'
                       ? `bg-[var(--status-info-bg)] border border-[var(--status-info)] text-[var(--text-primary)] shadow-[0_0_10px_var(--status-info-bg)] ${isMe ? 'rounded-tr-sm' : 'rounded-tl-sm'}`
                       : isMe 
