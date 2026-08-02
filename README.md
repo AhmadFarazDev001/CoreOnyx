@@ -16,7 +16,7 @@
 
 <br />
 
-## 🌟 Overview
+## 🌟 Overview 
 CoreOnyx is a robust, full-stack academic dashboard built for university courses. Designed with a premium aesthetic and high security in mind, it provides a seamless portal for Teaching Assistants (Admins) and Students to manage grades, announcements, code solutions, Q&A threads, and dispute tickets.
 
 ---
