@@ -18,6 +18,7 @@ export function AdminSolutionsClient({ solutions }: { solutions: Solution[] }) {
   const [labNumber, setLabNumber] = useState('');
   const [code, setCode] = useState('');
   const [output, setOutput] = useState('');
+  const [language, setLanguage] = useState('cpp');
   const [loading, setLoading] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
@@ -63,7 +64,7 @@ export function AdminSolutionsClient({ solutions }: { solutions: Solution[] }) {
       await createSolution({
         title,
         labNumber: parseInt(labNumber),
-        language: 'cpp',
+        language: language,
         code: code,
         consoleOutput: output,
       });
@@ -113,32 +114,42 @@ export function AdminSolutionsClient({ solutions }: { solutions: Solution[] }) {
                     />
                   </div>
                   <div className="col-span-1">
-                    <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">Quiz #</label>
-                    <Input 
-                      type="number"
-                      value={labNumber}
-                      onChange={(e) => setLabNumber(e.target.value)}
-                      placeholder="e.g. 4"
-                    />
+                    <label className="block text-sm font-medium text-[var(--text-secondary)] mb-1">Language</label>
+                    <select
+                      value={language}
+                      onChange={(e) => setLanguage(e.target.value)}
+                      className="flex h-10 w-full items-center justify-between rounded-xl border border-[var(--border-default)] bg-[var(--bg-tertiary)] px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[var(--accent-primary)] focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 text-[var(--text-primary)]"
+                    >
+                      <option value="cpp">C++</option>
+                      <option value="python">Python</option>
+                      <option value="java">Java</option>
+                      <option value="javascript">JavaScript</option>
+                      <option value="typescript">TypeScript</option>
+                      <option value="rust">Rust</option>
+                      <option value="c">C</option>
+                      <option value="csharp">C#</option>
+                      <option value="text">Pseudocode / Text</option>
+                    </select>
                   </div>
                 </div>
 
                 <div>
                   <div className="flex justify-between items-center mb-1">
-                    <label className="block text-sm font-medium text-[var(--text-secondary)]">Source Code (C++)</label>
+                    <label className="block text-sm font-medium text-[var(--text-secondary)]">Source Code</label>
                     <button 
                       type="button"
                       onClick={() => setCode(formatCode(code))}
                       className="text-xs text-[var(--accent-primary)] hover:underline"
+                      disabled={language !== 'cpp'}
                     >
-                      Auto-Format Code
+                      {language === 'cpp' ? 'Auto-Format Code' : ''}
                     </button>
                   </div>
                   <div className="relative">
                     <Textarea 
                       value={code}
                       onChange={(e) => setCode(e.target.value)}
-                      placeholder="Paste C++ code here..."
+                      placeholder={`Paste ${language === 'cpp' ? 'C++' : language === 'text' ? 'Pseudocode' : language} code here...`}
                       className="min-h-[300px] font-mono text-sm bg-[var(--editor-bg)] text-[var(--text-primary)] leading-relaxed whitespace-pre"
                     />
                     <div className="absolute top-3 right-3 text-[var(--text-muted)]">
