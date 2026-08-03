@@ -27,7 +27,7 @@ export default async function StudentLayout({
 
   const dbUser = await prisma.user.findUnique({
     where: { email: session.user.email },
-    select: { isBlocked: true }
+    select: { isBlocked: true, role: true }
   });
 
   if (!dbUser) {
@@ -36,6 +36,18 @@ export default async function StudentLayout({
 
   if (dbUser.isBlocked) {
     redirect('/blocked');
+  }
+
+  // If they are a student, ensure they are still in the Whitelist.
+  // If an admin removes them, they will be kicked out on their next navigation.
+  if (dbUser.role === 'STUDENT') {
+    const whitelistEntry = await prisma.whitelist.findUnique({
+      where: { email: session.user.email }
+    });
+    
+    if (!whitelistEntry) {
+      redirect('/api/force-logout');
+    }
   }
 
   return (
