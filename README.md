@@ -28,6 +28,7 @@ CoreOnyx is a robust, full-stack academic dashboard built for university courses
 - **Database:** PostgreSQL (Hosted via Neon)
 - **ORM:** Prisma v5
 - **Authentication:** Auth.js (NextAuth v5) with Google OAuth
+- **Real-Time Communication:** Pusher WebSockets (Optimistic UI, secure private channels)
 - **File Storage:** Vercel Blob (For Dispute Ticket attachments)
 - **Deployment:** Vercel
 
@@ -50,7 +51,7 @@ CoreOnyx is a robust, full-stack academic dashboard built for university courses
 ### 🎓 Student Portal
 - **Interactive Analytics:** View individual grades and course standing securely.
 - **Dispute Submission:** Submit structured tickets with image/PDF evidence directly to the Admin.
-- **Q&A Hub:** Start public threads or private conversations with the teaching staff.
+- **Q&A Hub:** Start public threads or private conversations with the teaching staff. Features **real-time instant messaging** powered by Pusher WebSockets, complete with read receipts, typing indicators, and instant sidebar updates without page reloads.
 
 ---
 
@@ -116,6 +117,12 @@ NEXT_PUBLIC_APP_URL="http://localhost:3000"
 
 # Vercel Blob Storage
 BLOB_READ_WRITE_TOKEN="your-vercel-blob-token"
+
+# Pusher (Real-Time WebSockets)
+PUSHER_APP_ID="your-pusher-app-id"
+NEXT_PUBLIC_PUSHER_APP_KEY="your-pusher-app-key"
+PUSHER_SECRET="your-pusher-secret"
+NEXT_PUBLIC_PUSHER_CLUSTER="your-pusher-cluster"
 ```
 
 ### 5. Initialize the Database
