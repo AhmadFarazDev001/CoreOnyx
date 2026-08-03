@@ -5,7 +5,13 @@ import { GradeTable } from '@/components/grades/GradeTable';
  * Server Component for the Student Grades page.
  * Fetches the authenticated student's grade records and displays them in a unified table.
  */
-export default async function StudentGradesPage() {
+export default async function StudentGradesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string }>;
+}) {
+  const params = await searchParams;
+  const query = (params.q || '').toLowerCase();
   const studentGrades = await getStudentGrades();
 
   return (
@@ -14,8 +20,7 @@ export default async function StudentGradesPage() {
         <h1 className="text-3xl font-bold text-[var(--text-primary)] mb-2">My Grades</h1>
         <p className="text-[var(--text-secondary)]">Track your performance and assessment scores.</p>
       </div>
-
-      <GradeTable record={studentGrades || undefined} />
+      <GradeTable record={studentGrades || undefined} query={query} />
     </div>
   );
 }

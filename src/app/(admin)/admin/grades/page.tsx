@@ -1,17 +1,31 @@
 import { getAllGrades } from '@/lib/actions/grades';
 import { Card } from '@/components/ui/Card';
 import { CSVUploader } from '@/components/admin/CSVUploader';
-import { Search, Filter, Download } from 'lucide-react';
-import { Input } from '@/components/ui/Input';
+import { Download } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { AdminRosterRow } from '@/components/admin/AdminRosterRow';
+import { SearchInput } from '@/components/shared/SearchInput';
 
 /**
  * Server Component for the Admin Grades Dashboard.
  * Displays student grades and allows CSV uploads.
  */
-export default async function AdminGradesPage() {
-  const grades = await getAllGrades();
+export default async function AdminGradesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string }>;
+}) {
+  const params = await searchParams;
+  const query = (params.q || '').toLowerCase();
+  
+  let grades = await getAllGrades();
+  
+  if (query) {
+    grades = grades.filter(g => 
+      (g.studentName && g.studentName.toLowerCase().includes(query)) ||
+      (g.studentEmail && g.studentEmail.toLowerCase().includes(query))
+    );
+  }
   const getGradeColor = (percentage: number) => {
     if (percentage >= 90) return 'text-[var(--status-success)]';
     if (percentage >= 80) return 'text-[var(--status-info)]';
@@ -50,16 +64,8 @@ export default async function AdminGradesPage() {
 
       <Card className="p-0 overflow-hidden">
         <div className="p-4 border-b border-[var(--border-subtle)] flex flex-col sm:flex-row items-center justify-between gap-4 bg-[var(--bg-tertiary)]/30">
-          <div className="relative w-full sm:w-72">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Search className="h-4 w-4 text-[var(--text-muted)]" />
-            </div>
-            <Input className="pl-10 h-9" placeholder="Search by name or email..." />
-          </div>
-          <div className="flex items-center gap-2 w-full sm:w-auto">
-            <Button variant="secondary" size="sm" className="h-9 w-full sm:w-auto gap-2">
-              <Filter className="w-4 h-4" /> Filter
-            </Button>
+          <div className="w-full sm:w-72">
+            <SearchInput placeholder="Search by name or email..." />
           </div>
         </div>
 

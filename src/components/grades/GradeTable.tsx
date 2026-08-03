@@ -2,6 +2,7 @@ import { GradeRecord } from '@/lib/types';
 import { Card } from '@/components/ui/Card';
 import { GraduationCap } from 'lucide-react';
 import { EmptyState } from '@/components/shared/EmptyState';
+import { SearchInput } from '@/components/shared/SearchInput';
 
 /**
  * GradeTable Component
@@ -11,8 +12,9 @@ import { EmptyState } from '@/components/shared/EmptyState';
  * 
  * @param {GradeRecord} record - The full grade record object for the student.
  * @param {boolean} hideHeader - If true, hides the "Your Grades" title (used in admin view).
+ * @param {string} query - Optional search query to filter assessments by name.
  */
-export function GradeTable({ record, hideHeader = false }: { record?: GradeRecord, hideHeader?: boolean }) {
+export function GradeTable({ record, hideHeader = false, query = '' }: { record?: GradeRecord, hideHeader?: boolean, query?: string }) {
   if (!record) {
     return (
       <Card className="mt-8 animate-page-in">
@@ -27,13 +29,17 @@ export function GradeTable({ record, hideHeader = false }: { record?: GradeRecor
 
   const assessmentsObj = (record.assessments as Record<string, { score: number, max: number, absMax: number, absScore: number }>) || {};
   
-  const assessments = Object.entries(assessmentsObj).map(([name, data]) => ({
+  let assessments = Object.entries(assessmentsObj).map(([name, data]) => ({
     name,
     score: Number(data.score),
     max: Number(data.max),
     absMax: Number(data.absMax),
     absScore: Number(data.absScore)
   }));
+
+  if (query) {
+    assessments = assessments.filter(a => a.name.toLowerCase().includes(query));
+  }
 
   const getPercentageColor = (percentage: number) => {
     if (percentage >= 80) return 'text-[var(--status-success)]';
@@ -44,9 +50,14 @@ export function GradeTable({ record, hideHeader = false }: { record?: GradeRecor
   return (
     <Card className="mt-8 animate-page-in overflow-hidden p-0">
       {!hideHeader && (
-        <div className="p-5 border-b border-[var(--border-subtle)] flex items-center gap-3">
-          <GraduationCap className="w-5 h-5 text-[var(--accent-primary)]" />
-          <h2 className="text-lg font-semibold text-[var(--text-primary)]">Your Grades</h2>
+        <div className="p-5 border-b border-[var(--border-subtle)] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <GraduationCap className="w-5 h-5 text-[var(--accent-primary)]" />
+            <h2 className="text-lg font-semibold text-[var(--text-primary)]">Your Grades</h2>
+          </div>
+          <div className="w-full sm:w-64">
+            <SearchInput placeholder="Search assessments..." />
+          </div>
         </div>
       )}
       

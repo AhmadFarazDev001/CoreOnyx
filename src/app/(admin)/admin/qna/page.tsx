@@ -3,7 +3,7 @@ import { getThreads } from '@/lib/actions/chat';
 import { auth } from '@/lib/auth';
 import { ChatThreadView } from '@/components/qna/ChatThreadView';
 import { EmptyState } from '@/components/shared/EmptyState';
-import { MessageSquare, ArrowLeft, Filter, Plus } from 'lucide-react';
+import { MessageSquare, ArrowLeft, Plus } from 'lucide-react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { Button } from '@/components/ui/Button';

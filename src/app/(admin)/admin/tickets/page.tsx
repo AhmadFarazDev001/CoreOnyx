@@ -2,7 +2,7 @@ import { DisputeListWrapper } from '@/components/disputes/DisputeListWrapper';
 import { getAllDisputes } from '@/lib/actions/disputes';
 import { DisputeDetails } from '@/components/disputes/DisputeDetails';
 import { EmptyState } from '@/components/shared/EmptyState';
-import { Ticket, ArrowLeft, Filter } from 'lucide-react';
+import { Ticket, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
@@ -65,9 +65,6 @@ export default async function AdminTicketsPage({
           <div>
             <h1 className="text-xl font-bold text-[var(--text-primary)]">All Tickets</h1>
           </div>
-          <Button variant="secondary" size="sm" className="px-3" title="Filter">
-            <Filter className="w-4 h-4" />
-          </Button>
         </div>
 
         <div className="flex flex-col">
