@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import { Metadata } from 'next';
 import { SecurityGuard } from '@/components/shared/SecurityGuard';
+import { SupportFooter } from '@/components/shared/SupportFooter';
 
 export const dynamic = 'force-dynamic';
 
@@ -37,13 +38,6 @@ export default async function StudentLayout({
     redirect('/blocked');
   }
 
-  // Fetch the admin's email dynamically for the support footer
-  const adminUser = await prisma.user.findFirst({
-    where: { role: 'ADMIN' },
-    select: { email: true }
-  });
-  const adminEmail = adminUser?.email || 'support@portal.com';
-
   return (
     <div className="min-h-screen bg-[var(--bg-primary)] flex flex-col">
       <SecurityGuard />
@@ -57,11 +51,7 @@ export default async function StudentLayout({
           {children}
         </div>
       </main>
-      <footer className="w-full py-6 mt-auto text-center border-t border-[var(--border-subtle)] bg-[var(--bg-secondary)]">
-        <p className="text-sm text-[var(--text-secondary)]">
-          If any problem occurs in the portal, please <a href={`mailto:${adminEmail}`} className="text-[var(--accent-primary)] hover:underline font-medium">email me</a>.
-        </p>
-      </footer>
+      <SupportFooter className="mt-auto" />
     </div>
   );
 }
