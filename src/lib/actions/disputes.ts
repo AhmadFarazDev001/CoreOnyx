@@ -51,7 +51,7 @@ export async function uploadFileToBlob(formData: FormData) {
   if (!file) throw new Error("No file provided");
 
   const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf', 'text/plain', 'text/csv'];
-  const MAX_SIZE = 5 * 1024 * 1024; // 5MB
+  const MAX_SIZE = 10 * 1024 * 1024; // 10MB
 
   if (!ALLOWED_TYPES.includes(file.type)) throw new Error("Invalid file type");
   if (file.size > MAX_SIZE) throw new Error("File too large");
