@@ -52,10 +52,7 @@ export function DisputeDetails({
     try {
       await deleteDispute(ticket.id);
       setIsDeleteModalOpen(false);
-      startTransition(() => {
-        router.push(isAdmin ? '/admin/tickets' : '/disputes');
-        router.refresh();
-      });
+      window.location.href = isAdmin ? '/admin/tickets' : '/disputes';
     } catch (error) {
       console.error(error);
       setIsUpdating(false);
