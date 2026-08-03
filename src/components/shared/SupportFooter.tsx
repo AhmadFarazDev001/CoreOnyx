@@ -11,7 +11,7 @@ export async function SupportFooter({ className }: { className?: string }) {
   const adminEmail = adminUser?.email || 'support@portal.com';
 
   return (
-    <footer className={cn("w-full py-6 text-center border-t border-[var(--border-subtle)] bg-[var(--bg-secondary)] z-50", className)}>
+    <footer className={cn("w-full py-6 text-center border-t border-[var(--border-subtle)] bg-[var(--bg-secondary)] relative z-10", className)}>
       <p className="text-sm text-[var(--text-secondary)]">
         If any problem occurs in the portal, please email me to this address: <span className="font-medium text-[var(--text-primary)]">{adminEmail}</span>
       </p>

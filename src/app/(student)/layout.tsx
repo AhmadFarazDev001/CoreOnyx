@@ -63,7 +63,7 @@ export default async function StudentLayout({
           {children}
         </div>
       </main>
-      <SupportFooter className="mt-auto" />
+      <SupportFooter className="mt-auto pb-24 md:pb-6" />
     </div>
   );
 }
