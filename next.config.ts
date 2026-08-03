@@ -9,6 +9,11 @@ const nextConfig: NextConfig = {
     'localhost',
     '127.0.0.1'
   ],
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '10mb',
+    },
+  },
   async headers() {
     const isDev = process.env.NODE_ENV === 'development';
     const scriptSrc = isDev 
