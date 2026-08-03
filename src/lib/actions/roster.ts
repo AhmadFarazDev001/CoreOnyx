@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/auth-guard";
 import { revalidatePath } from "next/cache";
 import { emailWhitelistSchema, bulkEmailWhitelistSchema } from "@/lib/validations";
+import { del } from '@vercel/blob';
 
 /**
  * Retrieves the full list of whitelisted student emails.
@@ -48,11 +49,47 @@ export async function addEmailToWhitelist(email: string) {
 export async function removeEmailFromWhitelist(email: string) {
   await requireAdmin();
 
+  // Find user to cascade delete their records
+  const user = await prisma.user.findUnique({
+    where: { email },
+    include: { disputes: true }
+  });
+
+  if (user) {
+    // 1. Delete attachments from Vercel Blob
+    const allAttachments = user.disputes.flatMap(d => d.attachments);
+    if (allAttachments.length > 0) {
+      try {
+        await del(allAttachments);
+      } catch (err) {
+        console.error('Failed to delete blobs during user removal:', err);
+      }
+    }
+
+    // 2. Delete all records sequentially in a transaction to respect foreign keys
+    await prisma.$transaction([
+      prisma.chatMessage.deleteMany({ where: { senderId: user.id } }),
+      prisma.threadParticipant.deleteMany({ where: { userId: user.id } }),
+      prisma.disputeTicket.deleteMany({ where: { studentId: user.id } }),
+      prisma.session.deleteMany({ where: { userId: user.id } }),
+      prisma.account.deleteMany({ where: { userId: user.id } }),
+      prisma.user.delete({ where: { id: user.id } }),
+    ]);
+  }
+
+  // 3. Delete GradeRecord (independent of User)
+  await prisma.gradeRecord.deleteMany({ where: { studentEmail: email } });
+
+  // 4. Finally, remove them from the Whitelist
   await prisma.whitelist.delete({
     where: { email },
   });
 
   revalidatePath("/admin/roster");
+  revalidatePath("/admin/grades");
+  revalidatePath("/admin/tickets");
+  revalidatePath("/admin/qna");
+  
   return { success: true };
 }
 
