@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { User, ChatThread } from '@/lib/types';
 import { ThreadList } from './ThreadList';
 import { cn } from '@/lib/utils';
+import { getPusherClient } from '@/lib/pusher-client';
+import { useEffect } from 'react';
 
 /**
  * Wrapper component for the ThreadList.
@@ -15,11 +17,27 @@ export function ThreadListWrapper({ threads, activeId, currentUser }: { threads:
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<'PUBLIC' | 'PRIVATE'>('PUBLIC');
 
+  useEffect(() => {
+    const pusher = getPusherClient();
+    const channel = pusher.subscribe('global-threads');
+
+    channel.bind('new-thread', () => {
+      router.refresh();
+    });
+
+    channel.bind('global-new-message', () => {
+      router.refresh();
+    });
+
+    return () => {
+      pusher.unsubscribe('global-threads');
+    };
+  }, [router]);
+
   const filteredThreads = threads.filter(thread => thread.type === activeTab);
 
   return (
     <div className="flex flex-col gap-4">
-      {/* Segmented Control for Tabs */}
       <div className="flex p-1 bg-[var(--bg-tertiary)] rounded-lg">
         <button
           onClick={() => setActiveTab('PUBLIC')}
@@ -50,7 +68,6 @@ export function ThreadListWrapper({ threads, activeId, currentUser }: { threads:
         activeId={activeId} 
         currentUser={currentUser}
         onSelect={(id) => {
-          // Determine the correct route based on user role (Admin vs Student)
           const basePath = currentUser.role === 'ADMIN' ? '/admin/qna' : '/qna';
           router.push(`${basePath}?id=${id}`, { scroll: false });
         }}

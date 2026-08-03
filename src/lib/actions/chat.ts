@@ -5,6 +5,7 @@ import { requireAuth, requireAdmin } from "@/lib/auth-guard";
 import { revalidatePath } from "next/cache";
 import { threadSchema, messageSchema } from "@/lib/validations";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { pusher } from "@/lib/pusher";
 
 /**
  * Fetches chat threads based on the given type (PUBLIC or PRIVATE).
@@ -95,6 +96,12 @@ export async function createThread(data: { title: string; type: "PUBLIC" | "PRIV
     },
   });
 
+  try {
+    await pusher.trigger('global-threads', 'new-thread', thread);
+  } catch (err) {
+    console.error("Pusher trigger failed:", err);
+  }
+
   revalidatePath("/qna");
   revalidatePath("/admin/qna");
   return thread;
@@ -137,11 +144,17 @@ export async function sendMessage(threadId: string, content: string, isCodeSnipp
     },
   });
 
-  // Update thread updatedAt
   await prisma.chatThread.update({
     where: { id: threadId },
     data: { updatedAt: new Date() },
   });
+
+  try {
+    await pusher.trigger(`private-chat-thread-${threadId}`, 'new-message', message);
+    await pusher.trigger('global-threads', 'global-new-message', message);
+  } catch (err) {
+    console.error("Pusher trigger failed:", err);
+  }
 
   revalidatePath("/qna");
   revalidatePath("/admin/qna");
@@ -165,6 +178,7 @@ export async function convertToFAQ(threadId: string) {
 
   revalidatePath("/qna");
   revalidatePath("/admin/qna");
+  try { await pusher.trigger('global-threads', 'new-thread', { id: threadId }); } catch (e) {}
   return { success: true };
 }
 
@@ -184,6 +198,7 @@ export async function resolveThread(threadId: string) {
 
   revalidatePath("/qna");
   revalidatePath("/admin/qna");
+  try { await pusher.trigger('global-threads', 'new-thread', { id: threadId }); } catch (e) {}
   return { success: true };
 }
 
@@ -200,6 +215,7 @@ export async function deleteThread(threadId: string) {
 
   revalidatePath("/qna");
   revalidatePath("/admin/qna");
+  try { await pusher.trigger('global-threads', 'new-thread', { id: threadId }); } catch (e) {}
   return { success: true };
 }
 

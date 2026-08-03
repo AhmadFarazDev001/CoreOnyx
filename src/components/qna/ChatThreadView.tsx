@@ -9,6 +9,7 @@ import { Send, Lock, Globe, AlertTriangle } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { sendMessage, resolveThread, deleteThread, markThreadAsRead } from '@/lib/actions/chat';
 import { useRouter } from 'next/navigation';
+import { getPusherClient } from '@/lib/pusher-client';
 
 /**
  * ChatThreadView Component
@@ -31,10 +32,22 @@ export function ChatThreadView({
   const [isSending, setIsSending] = useState(false);
   const [isActionLoading, setIsActionLoading] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [realtimeMessages, setRealtimeMessages] = useState<ChatMessage[]>(thread.messages || []);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
-  const messages = thread.messages || [];
+  useEffect(() => {
+    setRealtimeMessages((prev) => {
+      const merged = new Map();
+      prev.forEach(m => merged.set(m.id, m));
+      (thread.messages || []).forEach(m => merged.set(m.id, m));
+      
+      // Sort chronologically
+      return Array.from(merged.values()).sort((a: any, b: any) => 
+        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+      );
+    });
+  }, [thread.messages]);
   
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -42,37 +55,78 @@ export function ChatThreadView({
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages.length]); // scroll when message count changes
+  }, [realtimeMessages.length]); // scroll when message count changes
 
-  // Real-time polling & Read receipts
   useEffect(() => {
-    // 1. Mark thread as read immediately upon opening
     if (thread.unreadCount && thread.unreadCount > 0) {
       markThreadAsRead(thread.id).then(() => {
         router.refresh();
       });
     } else {
-      // Just in case it's 0 but the DB still needs updating
       markThreadAsRead(thread.id);
     }
 
-    // 2. Poll for new messages every 10 seconds to reduce DB load
-    const interval = setInterval(() => {
-      router.refresh();
-    }, 10000);
+    // Initialize Pusher for real-time messages on a secure private channel
+    const pusher = getPusherClient();
+    const channelName = `private-chat-thread-${thread.id}`;
+    const channel = pusher.subscribe(channelName);
 
-    return () => clearInterval(interval);
-  }, [thread.id, router, thread.unreadCount]);
+    channel.bind('new-message', (newMessage: ChatMessage) => {
+      setRealtimeMessages((prev) => {
+        if (prev.some(m => m.id === newMessage.id)) return prev;
+        
+        if (newMessage.senderId === currentUser.id) {
+          const optimisticIndex = prev.findIndex(m => String(m.id).startsWith('temp-') && m.content === newMessage.content);
+          if (optimisticIndex !== -1) {
+            const next = [...prev];
+            next[optimisticIndex] = newMessage;
+            return next;
+          }
+        }
+
+        return [...prev, newMessage];
+      });
+      
+      router.refresh();
+      
+      // Mark as read instantly if we are actively viewing
+      if (newMessage.senderId !== currentUser.id) {
+        markThreadAsRead(thread.id);
+      }
+    });
+
+    return () => {
+      pusher.unsubscribe(channelName);
+    };
+  }, [thread.id, router, thread.unreadCount, currentUser.id]);
 
   const handleSend = async () => {
     if (!content.trim() || isSending) return;
     
+    const optimisticMessage: any = {
+      id: `temp-${Date.now()}`,
+      threadId: thread.id,
+      senderId: currentUser.id,
+      content: content.trim(),
+      isCodeSnippet: false,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      sender: currentUser,
+    };
+    
+    setRealtimeMessages((prev) => [...prev, optimisticMessage]);
+    const messageContent = content.trim();
+    setContent('');
     setIsSending(true);
+
     try {
-      await sendMessage(thread.id, content.trim(), false);
+      await sendMessage(thread.id, messageContent, false);
+      setRealtimeMessages((prev) => prev.filter(m => m.id !== optimisticMessage.id));
       setContent('');
     } catch (error) {
       console.error("Failed to send message:", error);
+      setRealtimeMessages((prev) => prev.filter(m => m.id !== optimisticMessage.id));
+      setContent(messageContent);
     } finally {
       setIsSending(false);
     }
@@ -154,7 +208,7 @@ export function ChatThreadView({
 
       {/* Messages Area */}
       <div className="flex-1 overflow-y-auto p-4 space-y-6">
-        {messages.map((msg) => {
+        {realtimeMessages.map((msg) => {
           const isMe = msg.sender.id === currentUser.id;
           return (
             <div key={msg.id} className={`flex gap-3 max-w-[85%] ${isMe ? 'ml-auto flex-row-reverse' : 'mr-auto'}`}>
