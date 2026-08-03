@@ -53,7 +53,7 @@ export function NewDisputeModal({
             continue;
           }
           try {
-            const options = { maxSizeMB: 1.5, maxWidthOrHeight: 1920, useWebWorker: false };
+            const options = { maxSizeMB: 1.5, maxWidthOrHeight: 1920, useWebWorker: true };
             const compressedBlob = await imageCompression(file, options);
             const compressedFile = new File([compressedBlob], file.name, { type: file.type });
             processed.push({
